@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מעבדת תקשורת CCNA - סימולטור ארון תשתית</title>
+  <style>
+    :root {
+      --bg-color: #dce4ec;
+      --header-bg: #111420;
+      --rack-border: #111420;
+      --rack-bg: #000000;
+      --device-bg: #141722;
+      --device-border: #2a2e3d;
+      --btn-blue: #0088cc;
+      --btn-green: #27ae60;
+      --btn-red: #e74c3c;
+      --btn-cyan: #16a085;
+      --btn-orange: #d68910;
+      --text-main: #ffffff;
+      --sidebar-bg: #e2ebf3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      direction: rtl;
+      position: relative;
+    }
+
+    /* Navbar */
+    header {
+      background-color: var(--header-bg);
+      color: var(--text-main);
+      padding: 0 15px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .top-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-top {
+      padding: 7px 12px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-top:hover { opacity: 0.85; }
+    .btn-reset { background-color: var(--btn-red); }
+    .btn-topo { background-color: #34495e; }
+    .btn-nav { background-color: #2c3e50; border: 1px solid #455a64; }
+    .btn-orange { background-color: var(--btn-orange); }
+
+    /* Header Title & Crazy Spinning Avatar */
+    .header-title-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .crazy-avatar-img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #00f0ff;
+      box-shadow: 0 0 12px #00f0ff;
+      animation: spinAvatar 4s linear infinite;
+      cursor: pointer;
+    }
+
+    @keyframes spinAvatar {
+      0% { transform: rotate(0deg) scale(1); box-shadow: 0 0 10px #00f0ff; }
+      50% { transform: rotate(180deg) scale(1.1); box-shadow: 0 0 20px #ff007f; }
+      100% { transform: rotate(360deg) scale(1); box-shadow: 0 0 10px #00f0ff; }
+    }
+
+    /* Layout - Full Width Responsive Grid */
+    .app-body {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 55px);
+      padding: 15px;
+      gap: 15px;
+      width: 100%;
+    }
+
+    /* Left: Terminal Area */
+    .terminal-container {
+      flex: 1;
+      min-width: 300px;
+      background-color: #0c1017;
+      border-radius: 10px;
+      border: 4px solid #2b303a;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      background-color: #161922;
+      color: #a0aec0;
+      padding: 10px 15px;
+      border-bottom: 2px solid #2b303a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .btn-close-term {
+      background: var(--btn-red);
+      color: white;
+      border: none;
+      padding: 2px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .terminal-screen {
+      flex: 1;
+      padding: 15px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      color: #38ef7d;
+      font-size: 14px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      display: flex;
+      flex-direction: column;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .empty-state {
+      margin: auto;
+      text-align: center;
+      color: #4a5568;
+      font-size: 14px;
+      line-height: 1.6;
+      direction: rtl;
+    }
+
+    /* Center: Rack Window */
+    .rack-wrapper {
+      flex: 1;
+      min-width: 320px;
+      background-color: var(--rack-bg);
+      border: 6px solid var(--rack-border);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Device UI */
+    .rack-device {
+      background-color: var(--device-bg);
+      border: 1px solid var(--device-border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      position: relative;
+    }
+
+    .device-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .device-buttons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .dev-btn {
+      font-size: 11px;
+      padding: 3px 7px;
+      border: none;
+      border-radius: 3px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .btn-delete { background-color: var(--btn-red); }
+    .btn-cli { background-color: var(--btn-green); }
+    .btn-exit { background-color: #2980b9; }
+    .btn-ip { background-color: var(--btn-cyan); }
+
+    .device-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .device-name {
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .cisco-tag {
+      background-color: var(--btn-blue);
+      color: white;
+      font-size: 9px;
+      padding: 2px 4px;
+      border-radius: 2px;
+      font-weight: bold;
+    }
+
+    .ports-container {
+      background-color: #0b0c10;
+      border: 1px solid #1e2330;
+      border-radius: 4px;
+      padding: 8px;
+      margin-top: 4px;
+    }
+
+    .ports-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      direction: ltr;
+    }
+
+    .port-box {
+      min-width: 36px;
+      height: 32px;
+      border: 1px solid #4a5568;
+      background-color: #12151e;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: #a0aec0;
+      cursor: pointer;
+      padding: 0 4px;
+      transition: all 0.2s;
+      font-family: monospace;
+    }
+
+    .port-box:hover {
+      border-color: #0088cc;
+      color: #fff;
+      background-color: #1a2233;
+    }
+
+    .port-box.purple { border-color: #9b59b6; }
+    .port-box.yellow { border-color: #f1c40f; }
+
+    /* Right: Sidebar */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background-color: var(--sidebar-bg);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+      border: 1px solid #cbd5e0;
+    }
+
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: bold;
+      color: #1a202c;
+      margin-bottom: 6px;
+      border-bottom: 2px solid #cbd5e0;
+      padding-bottom: 4px;
+    }
+
+    .add-btns-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .btn-add-device {
+      width: 100%;
+      background-color: var(--btn-green);
+      color: white;
+      border: none;
+      padding: 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-add-device:hover { opacity: 0.9; }
+
+    .cable-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cable-card {
+      background-color: white;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      padding: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+
+    .cable-card:hover { border-color: var(--btn-blue); }
+
+    .cable-card.active {
+      border: 2px solid var(--btn-blue);
+      background-color: #ebf8ff;
+    }
+
+    .cable-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cable-name {
+      font-size: 11px;
+      font-weight: bold;
+      color: #2d3748;
+    }
+
+    .cable-desc {
+      font-size: 9px;
+      color: #718096;
+      direction: ltr;
+      text-align: right;
+    }
+
+    .cable-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    .instructions-box {
+      background-color: white;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 10px;
+      color: #4a5568;
+      line-height: 1.4;
+    }
+
+    /* Floating Crazy Bot Window */
+    .crazy-floating-bot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #6b21a8, #3b82f6);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 999;
+      animation: floatPulse 2s ease-in-out infinite;
+      border: 2px solid #a855f7;
+    }
+
+    @keyframes floatPulse {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.05); }
+    }
+
+    .bot-avatar-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #00f0ff;
+      animation: crazyEye 1.2s infinite alternate;
+    }
+
+    @keyframes crazyEye {
+      0% { transform: rotate(-8deg) scale(1); }
+      100% { transform: rotate(8deg) scale(1.1); }
+    }
+
+    .bot-text {
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* --- Custom Windows-style Dialog Modal --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .win-modal-box {
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      width: 480px;
+      max-width: 92%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid #707070;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .win-modal-header {
+      background-color: #ffffff;
+      padding: 8px 14px;
+      border-bottom: 1px solid #d0d0d0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 13px;
+      color: #000;
+      direction: ltr;
+    }
+
+    .win-modal-close-x {
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      color: #222;
+      padding: 0 4px;
+    }
+
+    .win-modal-close-x:hover {
+      color: #e74c3c;
+    }
+
+    .win-modal-body {
+      padding: 20px 24px;
+      color: #222;
+      direction: rtl;
+    }
+
+    .win-modal-subtitle {
+      text-align: center;
+      margin-bottom: 22px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .win-ip-form-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .win-ip-form-row label {
+      font-size: 13px;
+      font-weight: bold;
+      color: #222;
+      direction: ltr;
+    }
+
+    .win-ip-form-row input {
+      width: 220px;
+      padding: 5px 8px;
+      border: 1px solid #7a7a7a;
+      border-radius: 2px;
+      font-family: monospace;
+      font-size: 13px;
+      direction: ltr;
+      text-align: left;
+      background-color: #ffffff;
+    }
+
+    .win-modal-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+      justify-content: flex-start;
+    }
+
+    .btn-win-ok {
+      background-color: #277e33;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-win-ok:hover {
+      background-color: #1e6327;
+    }
+
+    .btn-win-cancel {
+      background-color: #3b4352;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-win-cancel:hover {
+      background-color: #292e38;
+    }
+
+    .en-term {
+      direction: ltr;
+      display: inline-block;
+      unicode-bidi: embed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header>
+    <div class="top-tools">
+      <button class="btn-top btn-reset" onclick="resetSimulator()">איפוס</button>
+      <button class="btn-top btn-topo" onclick="openTopologyModal()">📖 טופולוגיה</button>
+      <button class="btn-top btn-nav" onclick="openTerminal('PC CMD', 'PC1')"><span class="en-term">PC CMD</span></button>
+      <button class="btn-top btn-nav" onclick="openTerminal('PuTTY Serial', 'Router1')">💻 <span class="en-term">PuTTY Serial</span></button>
+      <button class="btn-top btn-orange" onclick="alert('פתחת את רשימת 10 משימות המעבדה!')">🏆 10 משימות מעבדה</button>
+    </div>
+
+    <!-- Title with Crazy Avatar Image from Drive -->
+    <div class="header-title-container">
+      <div style="font-weight: bold; font-size: 15px;">מעבדת תקשורת <span class="en-term">CCNA</span> - סימולטור ארון תשתית</div>
+      <img src="https://lh3.googleusercontent.com/d/1t9QaPCKLvtAhWncetA83ALY8EIvpnFte" class="crazy-avatar-img" alt="Crazy Avatar" title="המורה המטורלל של CCNA" onclick="alert('🤖: מה קורה אחי? צריך עזרה בהגדרת VLANs או OSPF?')">
+    </div>
+  </header>
+
+  <!-- App Main Body -->
+  <div class="app-body">
+
+    <!-- 1. Left Area: Terminal Panel -->
+    <div class="terminal-container">
+      <div class="terminal-header">
+        <span id="terminalTitle">מסוף תקשורת</span>
+        <button class="btn-close-term" onclick="closeTerminal()">✕ סגור</button>
+      </div>
+      <div class="terminal-screen" id="terminalScreen">
+        <div class="empty-state">
+          לחץ על <b class="en-term">CLI</b> ברכיב,<br>או על <b class="en-term">PC CMD / PuTTY Serial</b> בתפריט כדי לפתוח מסוף עבודה
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Center Area: Network Rack Panel -->
+    <div class="rack-wrapper" id="rackContainer">
+
+      <!-- Device 1: Router -->
+      <div class="rack-device" id="device-router">
+        <div class="device-title-bar">
+          <div class="device-buttons">
+            <button class="dev-btn btn-delete" onclick="deleteDevice('device-router')">🗑 מחק</button>
+            <button class="dev-btn btn-cli" onclick="openTerminal('Cisco CLI', 'Cisco ISR 4331 Router')">💻 <span class="en-term">CLI</span></button>
+            <button class="dev-btn btn-exit" onclick="alert('הגדרת יציאה / Console')">➡️ יציאה</button>
+            <button class="dev-btn btn-ip" onclick="openIPModal('Cisco ISR 4331 Gigabit Router', '192.168.1.1', '255.255.255.0', '192.168.1.1', '8.8.8.8')">🌐 <span class="en-term">IP</span></button>
+          </div>
+          <div class="device-info">
+            <span class="device-name en-term">Cisco ISR 4331 Gigabit Router</span>
+            <span class="cisco-tag">CISCO</span>
+          </div>
+        </div>
+        <div class="ports-container">
+          <div class="ports-row">
+            <div class="port-box purple" onclick="openPortModal('Cisco ISR 4331 Gigabit Router', 'Console')">Console</div>
+            <div class="port-box" onclick="openPortModal('Cisco ISR 4331 Gigabit Router', 'g0/0/0')">g0/0/0</div>
+            <div class="port-box" onclick="openPortModal('Cisco ISR 4331 Gigabit Router', 'g0/0/1')">g0/0/1</div>
+            <div class="port-box" onclick="openPortModal('Cisco ISR 4331 Gigabit Router', 'Serial0/1/0')">Serial0/1/0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Device 2: Switch -->
+      <div class="rack-device" id="device-switch">
+        <div class="device-title-bar">
+          <div class="device-buttons">
+            <button class="dev-btn btn-delete" onclick="deleteDevice('device-switch')">🗑 מחק</button>
+            <button class="dev-btn btn-cli" onclick="openTerminal('Cisco CLI', 'Cisco Catalyst 2960 Switch')">💻 <span class="en-term">CLI</span></button>
+            <button class="dev-btn btn-exit" onclick="alert('הגדרת יציאה / Console')">➡️ יציאה</button>
+            <button class="dev-btn btn-ip" onclick="openIPModal('Cisco Catalyst 2960 Switch', '192.168.1.2', '255.255.255.0', '192.168.1.1', '8.8.8.8')">🌐 <span class="en-term">IP</span></button>
+          </div>
+          <div class="device-info">
+            <span class="device-name en-term">Cisco Catalyst 2960 Switch</span>
+            <span class="cisco-tag">CISCO</span>
+          </div>
+        </div>
+        <div class="ports-container">
+          <div class="ports-row">
+            <div class="port-box purple" onclick="openPortModal('Cisco Catalyst 2960 Switch', 'Console')">Console</div>
+            <div class="port-box" onclick="openPortModal('Cisco Catalyst 2960 Switch', 'Fa0/1')">Fa0/1</div>
+            <div class="port-box" onclick="openPortModal('Cisco Catalyst 2960 Switch', 'Fa0/2')">Fa0/2</div>
+            <div class="port-box" onclick="openPortModal('Cisco Catalyst 2960 Switch', 'Fa0/3')">Fa0/3</div>
+            <div class="port-box" onclick="openPortModal('Cisco Catalyst 2960 Switch', 'Fa0/4')">Fa0/4</div>
+            <div class="port-box yellow" onclick="openPortModal('Cisco Catalyst 2960 Switch', 'Fiber0/1')">Fiber0/1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Device 3: PC / Server -->
+      <div class="rack-device" id="device-pc">
+        <div class="device-title-bar">
+          <div class="device-buttons">
+            <button class="dev-btn btn-delete" onclick="deleteDevice('device-pc')">🗑 מחק</button>
+            <button class="dev-btn btn-cli" onclick="openTerminal('PC CMD', 'Rack Workstation Server (PC1)')">💻 <span class="en-term">CLI</span></button>
+            <button class="dev-btn btn-exit" onclick="alert('הגדרת יציאה / Console')">➡️ יציאה</button>
+            <button class="dev-btn btn-ip" onclick="openIPModal('Rack Workstation Server (PC1)', '192.168.1.100', '255.255.255.0', '192.168.1.1', '8.8.8.8')">🌐 <span class="en-term">IP</span></button>
+          </div>
+          <div class="device-info">
+            <span class="device-name en-term">Rack Workstation Server (PC1)</span>
+            <span class="cisco-tag">CISCO</span>
+          </div>
+        </div>
+        <div class="ports-container">
+          <div class="ports-row">
+            <div class="port-box purple" onclick="openPortModal('Rack Workstation Server (PC1)', 'RS232')">RS232</div>
+            <div class="port-box" onclick="openPortModal('Rack Workstation Server (PC1)', 'ETH0')">ETH0</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. Right Area: Control Sidebar -->
+    <div class="sidebar">
+      <div>
+        <div class="sidebar-title">הוספת ציוד לארון</div>
+        <div class="add-btns-grid">
+          <button class="btn-add-device" onclick="addDevice('Router')">+ ראוטר <span class="en-term">Cisco</span></button>
+          <button class="btn-add-device" onclick="addDevice('Switch')">+ סוויץ' <span class="en-term">Cisco</span></button>
+          <button class="btn-add-device" style="background:#2980b9;" onclick="addDevice('PC')">+ שרת / מחשב</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="sidebar-title">בחירת כבל תקשורת</div>
+        <div class="cable-list">
+          <div class="cable-card active" onclick="selectCable(this, 'Straight-Through')">
+            <div class="cable-info">
+              <span class="cable-name en-term">Straight-Through</span>
+              <span class="cable-desc">Switch &lt;-&gt; Router / PC</span>
+            </div>
+            <div class="cable-color" style="background-color: #0088cc;"></div>
+          </div>
+
+          <div class="cable-card" onclick="selectCable(this, 'Crossover')">
+            <div class="cable-info">
+              <span class="cable-name en-term">Crossover</span>
+              <span class="cable-desc">Switch &lt;-&gt; Switch / PC</span>
+            </div>
+            <div class="cable-color" style="background-color: #e67e22;"></div>
+          </div>
+
+          <div class="cable-card" onclick="selectCable(this, 'Rollover Console')">
+            <div class="cable-info">
+              <span class="cable-name en-term">Rollover Console</span>
+              <span class="cable-desc">PC &lt;-&gt; Console Port</span>
+            </div>
+            <div class="cable-color" style="background-color: #8e44ad;"></div>
+          </div>
+
+          <div class="cable-card" onclick="selectCable(this, 'Fiber Optic')">
+            <div class="cable-info">
+              <span class="cable-name">סיב אופטי</span>
+              <span class="cable-desc">חיבורי <span class="en-term">SFP</span> מהירים</span>
+            </div>
+            <div class="cable-color" style="background-color: #f1c40f;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sidebar-title">הנחיות עבודה</div>
+        <div class="instructions-box">
+          • כדי להתחבר ב-<span class="en-term">PuTTY</span>: חבר כבל קונסולה מ-<span class="en-term">PC1</span> לציוד.<br>
+          • לחץ על "10 משימות מעבדה" להתקדמות מודרכת.<br>
+          • לחץ על כפתור <b class="en-term">CLI</b> בכל רכיב לפתיחת הטרמינל.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Floating Crazy Bot Window -->
+  <div class="crazy-floating-bot" onclick="alert('🚀 לכל שאלה לחצו עלי! הבוט מוכן לסייע בפקודות Cisco CCNA!')">
+    <img src="https://lh3.googleusercontent.com/d/1fzqv93VKIW_VT8-e1HdJxBmbU2sFnwlb" class="bot-avatar-img" alt="Crazy Bot Avatar">
+    <div class="bot-text">לכל שאלה לחצו עלי</div>
+  </div>
+
+  <!-- Universal Custom Windows Modal Dialog -->
+  <div class="modal-overlay" id="winModalOverlay">
+    <div class="win-modal-box">
+      <div class="win-modal-header">
+        <span class="win-modal-close-x" onclick="closeWinModal()">✕</span>
+        <span id="winModalHeaderTitle">Internet Protocol Version 4 (TCP/IPv4) Properties</span>
+      </div>
+      <div class="win-modal-body" id="winModalBody">
+        <!-- Content injects dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Functions -->
+  <script>
+    let activeCable = 'Straight-Through';
+    let selectedPortSource = null;
+
+    /* Custom Modal Handler */
+    function openWinModal(titleText, bodyHTML) {
+      document.getElementById('winModalHeaderTitle').innerText = titleText;
+      document.getElementById('winModalBody').innerHTML = bodyHTML;
+      document.getElementById('winModalOverlay').style.display = 'flex';
+    }
+
+    function closeWinModal() {
+      document.getElementById('winModalOverlay').style.display = 'none';
+    }
+
+    /* IP Properties Modal (Exactly like screenshot) */
+    function openIPModal(deviceName, ip, mask, gateway, dns) {
+      const bodyContent = `
+        <div class="win-modal-subtitle">
+          הגדרת תצורת רשת עבור: <strong class="en-term">${deviceName}</strong>
+        </div>
+        <div class="win-ip-form-row">
+          <input type="text" id="modalIpInput" value="${ip}">
+          <label>:IP Address</label>
+        </div>
+        <div class="win-ip-form-row">
+          <input type="text" id="modalMaskInput" value="${mask}">
+          <label>:Subnet Mask</label>
+        </div>
+        <div class="win-ip-form-row">
+          <input type="text" id="modalGatewayInput" value="${gateway}">
+          <label>:Default Gateway</label>
+        </div>
+        <div class="win-ip-form-row">
+          <input type="text" id="modalDnsInput" value="${dns}">
+          <label>:Preferred DNS Server</label>
+        </div>
+        <div class="win-modal-footer">
+          <button class="btn-win-ok" onclick="saveIPSettings('${deviceName}')">אישור (OK)</button>
+          <button class="btn-win-cancel" onclick="closeWinModal()">ביטול</button>
+        </div>
+      `;
+      openWinModal('Internet Protocol Version 4 (TCP/IPv4) Properties', bodyContent);
+    }
+
+    function saveIPSettings(deviceName) {
+      const newIp = document.getElementById('modalIpInput').value;
+      closeWinModal();
+      openTerminal('PC CMD', deviceName);
+      const screen = document.getElementById('terminalScreen');
+      screen.innerHTML += `\n[SYSTEM] IPv4 address updated successfully to: ${newIp}\nC:\\Users\\Student> `;
+    }
+
+    /* Topology Modal */
+    function openTopologyModal() {
+      const bodyContent = `
+        <div class="win-modal-subtitle">
+          מפת טופולוגיית רשת מחוברת
+        </div>
+        <div style="background:#111; color:#38ef7d; padding:15px; border-radius:4px; font-family:monospace; font-size:12px; direction:ltr; text-align:left; line-height:1.6;">
+          [Router: ISR4331] --- (g0/0/0) === [Switch: Catalyst2960] (Fa0/1)<br>
+          [Switch: Catalyst2960] --- (Fa0/2) === [PC1: Server Workstation]<br>
+          --------------------------------------------------<br>
+          Status: All links UP / Active<br>
+          Duplex: Full / Speed: 1000Mbps
+        </div>
+        <div class="win-modal-footer">
+          <button class="btn-win-ok" onclick="closeWinModal()">אישור (OK)</button>
+        </div>
+      `;
+      openWinModal('Network Topology Viewer', bodyContent);
+    }
+
+    /* Port Modal */
+    function openPortModal(deviceName, portName) {
+      if (!selectedPortSource) {
+        selectedPortSource = `${deviceName} [${portName}]`;
+        const bodyContent = `
+          <div class="win-modal-subtitle">
+            הגדרת יציאה (Port Properties) עבור: <strong class="en-term">${deviceName}</strong>
+          </div>
+          <div class="win-ip-form-row">
+            <input type="text" value="${portName}" readonly style="background:#e0e0e0;">
+            <label>:Port Name</label>
+          </div>
+          <div class="win-ip-form-row">
+            <input type="text" value="${activeCable}">
+            <label>:Cable Selected</label>
+          </div>
+          <div class="win-ip-form-row">
+            <input type="text" value="Connected / Ready">
+            <label>:Link Status</label>
+          </div>
+          <div class="win-modal-footer">
+            <button class="btn-win-ok" onclick="closeWinModal()">אישור (OK)</button>
+            <button class="btn-win-cancel" onclick="selectedPortSource=null; closeWinModal();">ביטול</button>
+          </div>
+        `;
+        openWinModal(`Port Settings - ${portName}`, bodyContent);
+      } else {
+        const source = selectedPortSource;
+        selectedPortSource = null;
+        const bodyContent = `
+          <div class="win-modal-subtitle">
+            חיבור כבל תקשורת הושלם!
+          </div>
+          <div style="text-align:center; padding:10px; font-size:13px;">
+            חוברו בהצלחה באמצעות כבל <b>${activeCable}</b>:<br><br>
+            <code class="en-term" style="background:#fff; padding:5px 10px; border:1px solid #ccc; border-radius:3px;">${source} ➔ ${deviceName} [${portName}]</code>
+          </div>
+          <div class="win-modal-footer">
+            <button class="btn-win-ok" onclick="closeWinModal()">אישור (OK)</button>
+          </div>
+        `;
+        openWinModal('Connection Status', bodyContent);
+      }
+    }
+
+    function openTerminal(type, deviceName) {
+      const title = document.getElementById('terminalTitle');
+      const screen = document.getElementById('terminalScreen');
+
+      title.innerText = `${type} - ${deviceName}`;
+
+      if (type.includes('PuTTY')) {
+        screen.innerHTML = `
+--- PuTTY Serial Connection (COM1, 9600 8N1) ---
+Connecting to ${deviceName}... Connected!
+
+Press RETURN to get started.
+
+Router> enable
+Router# configure terminal
+Enter configuration commands, one per line. End with CNTL/Z.
+Router(config)# 
+`;
+      } else if (type.includes('CMD')) {
+        screen.innerHTML = `
+Microsoft Windows [Version 10.0.19045]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\\Users\\Student> ipconfig
+
+Ethernet adapter ETH0:
+   Connection-specific DNS Suffix  . : local
+   IPv4 Address. . . . . . . . . . . : 192.168.1.100
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.1.1
+
+C:\\Users\\Student> 
+`;
+      } else {
+        screen.innerHTML = `
+Connecting to ${deviceName} via Console...
+Type "help" or standard Cisco commands.
+
+${deviceName}> show ip interface brief
+Interface                  IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0/0       unassigned      YES unset  up                    up      
+GigabitEthernet0/0/1       unassigned      YES unset  down                  down    
+
+${deviceName}> 
+`;
+      }
+    }
+
+    function closeTerminal() {
+      document.getElementById('terminalTitle').innerText = 'מסוף תקשורת';
+      document.getElementById('terminalScreen').innerHTML = `
+        <div class="empty-state">
+          לחץ על <b class="en-term">CLI</b> ברכיב,<br>או על <b class="en-term">PC CMD / PuTTY Serial</b> בתפריט כדי לפתוח מסוף עבודה
+        </div>
+      `;
+    }
+
+    function deleteDevice(deviceId) {
+      if (confirm("האם אתה בטוח שברצונך למחוק רכיב זה מתוך הארון?")) {
+        const elem = document.getElementById(deviceId);
+        if (elem) elem.remove();
+      }
+    }
+
+    function selectCable(cardElem, cableType) {
+      document.querySelectorAll('.cable-card').forEach(c => c.classList.remove('active'));
+      cardElem.classList.add('active');
+      activeCable = cableType;
+    }
+
+    function addDevice(type) {
+      const rack = document.getElementById('rackContainer');
+      const id = 'device-' + Date.now();
+      
+      let html = '';
+      if (type === 'Router') {
+        html = `
+        <div class="rack-device" id="${id}">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">🗑 מחק</button>
+              <button class="dev-btn btn-cli" onclick="openTerminal('Cisco CLI', 'Router נוסף')">💻 <span class="en-term">CLI</span></button>
+              <button class="dev-btn btn-exit" onclick="alert('הגדרת יציאה')">➡️ יציאה</button>
+              <button class="dev-btn btn-ip" onclick="openIPModal('Cisco 2911 Router', '192.168.1.3', '255.255.255.0', '192.168.1.1', '8.8.8.8')">🌐 <span class="en-term">IP</span></button>
+            </div>
+            <div class="device-info">
+              <span class="device-name en-term">Cisco 2911 Router</span>
+              <span class="cisco-tag">CISCO</span>
+            </div>
+          </div>
+          <div class="ports-container">
+            <div class="ports-row">
+              <div class="port-box purple" onclick="openPortModal('Cisco 2911 Router', 'Console')">Console</div>
+              <div class="port-box" onclick="openPortModal('Cisco 2911 Router', 'g0/0')">g0/0</div>
+              <div class="port-box" onclick="openPortModal('Cisco 2911 Router', 'g0/1')">g0/1</div>
+            </div>
+          </div>
+        </div>`;
+      } else if (type === 'Switch') {
+        html = `
+        <div class="rack-device" id="${id}">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">🗑 מחק</button>
+              <button class="dev-btn btn-cli" onclick="openTerminal('Cisco CLI', 'Switch נוסף')">💻 <span class="en-term">CLI</span></button>
+              <button class="dev-btn btn-exit" onclick="alert('הגדרת יציאה')">➡️ יציאה</button>
+              <button class="dev-btn btn-ip" onclick="openIPModal('Cisco Switch נוסף', '192.168.1.4', '255.255.255.0', '192.168.1.1', '8.8.8.8')">🌐 <span class="en-term">IP</span></button>
+            </div>
+            <div class="device-info">
+              <span class="device-name en-term">Cisco Catalyst 2960 Switch</span>
+              <span class="cisco-tag">CISCO</span>
+            </div>
+          </div>
+          <div class="ports-container">
+            <div class="ports-row">
+              <div class="port-box purple" onclick="openPortModal('Cisco Switch נוסף', 'Console')">Console</div>
+              <div class="port-box" onclick="openPortModal('Cisco Switch נוסף', 'Fa0/1')">Fa0/1</div>
+              <div class="port-box" onclick="openPortModal('Cisco Switch נוסף', 'Fa0/2')">Fa0/2</div>
+            </div>
+          </div>
+        </div>`;
+      } else {
+        html = `
+        <div class="rack-device" id="${id}">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">🗑 מחק</button>
+              <button class="dev-btn btn-cli" onclick="openTerminal('PC CMD', 'PC נוסף')">💻 <span class="en-term">CLI</span></button>
+              <button class="dev-btn btn-exit" onclick="alert('הגדרת יציאה')">➡️ יציאה</button>
+              <button class="dev-btn btn-ip" onclick="openIPModal('Workstation PC', '192.168.1.101', '255.255.255.0', '192.168.1.1', '8.8.8.8')">🌐 <span class="en-term">IP</span></button>
+            </div>
+            <div class="device-info">
+              <span class="device-name en-term">Workstation PC</span>
+              <span class="cisco-tag">CISCO</span>
+            </div>
+          </div>
+          <div class="ports-container">
+            <div class="ports-row">
+              <div class="port-box purple" onclick="openPortModal('Workstation PC', 'RS232')">RS232</div>
+              <div class="port-box" onclick="openPortModal('Workstation PC', 'ETH0')">ETH0</div>
+            </div>
+          </div>
+        </div>`;
+      }
+
+      rack.insertAdjacentHTML('beforeend', html);
+    }
+
+    function resetSimulator() {
+      if (confirm("האם אתה בטוח שברצונך לאפס את המעבדה?")) {
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>
