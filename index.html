@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>מעבדת תקשורת CCNA - סימולטור ארון תשתית אחוד</title>
+  <title>מעבדת התקשוב של סהר - בונים, מחליפים ומחווטים בזמן אמת</title>
   <style>
     :root {
       --bg-color: #0d1117;
@@ -511,6 +511,13 @@
 <body>
 
   <header>
+    <!-- כותרת ואוואטר בצד ימין (RTL) -->
+    <div class="header-title-container">
+      <img src="https://lh3.googleusercontent.com/d/1t9QaPCKLvtAhWncetA83ALY8EIvpnFte" class="crazy-avatar-img" alt="Crazy Avatar" onclick="alert('🤖: מה קורה אחי? הגדר כתובות IP לבד וחבר קונסול אמיתי ב-PuTTY!')">
+      <div style="font-weight: bold; font-size: 13px;">מעבדת התקשוב של סהר - בונים, מחליפים ומחווטים בזמן אמת</div>
+    </div>
+
+    <!-- כפתורים וטאבים בצד שמאל -->
     <div class="top-tools">
       <button class="btn-top btn-reset" onclick="resetSimulator()">איפוס מעבדה</button>
       <button class="btn-top btn-topo" onclick="openTopologyModal()">📖 מפת כבלים</button>
@@ -518,11 +525,6 @@
       <button class="btn-top" style="background:#238636;" onclick="addDevice('Router')">+ ראוטר</button>
       <button class="btn-top" style="background:#238636;" onclick="addDevice('Switch')">+ סוויץ'</button>
       <button class="btn-top" style="background:#0969da;" onclick="addDevice('PC')">+ מחשב PC</button>
-    </div>
-
-    <div class="header-title-container">
-      <div style="font-weight: bold; font-size: 13px;">מעבדת תקשורת CCNA - Dashboard אחוד</div>
-      <img src="https://lh3.googleusercontent.com/d/1t9QaPCKLvtAhWncetA83ALY8EIvpnFte" class="crazy-avatar-img" alt="Crazy Avatar" onclick="alert('🤖: מה קורה אחי? הגדר כתובות IP לבד וחבר קונסול אמיתי ב-PuTTY!')">
     </div>
   </header>
 
