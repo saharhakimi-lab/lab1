@@ -759,24 +759,21 @@
 
   </div>
 
-  <!-- Bottom Cable Controls Toolbar (Color Coded as Image) -->
+  <!-- Bottom Cable Controls Toolbar (Original Cable Selector) -->
   <div class="bottom-toolbar">
     <div class="cable-selector-group">
       <span style="font-weight:bold; color:#f0f6fc;">בחירת סוג כבל:</span>
-      <div class="cable-pill active" onclick="selectCable(this, 'LAN (Blue)', '#38bdf8')">
-        <div class="cable-dot" style="background:#38bdf8;"></div> כבל LAN (כחול)
+      <div class="cable-pill active" onclick="selectCable(this, 'Straight-Through', '#38bdf8')">
+        <div class="cable-dot" style="background:#38bdf8;"></div> ישר (Straight-Through)
       </div>
-      <div class="cable-pill" onclick="selectCable(this, 'WAN / ISP (Yellow)', '#f1c40f')">
-        <div class="cable-dot" style="background:#f1c40f;"></div> כבל WAN/ISP (צהוב)
+      <div class="cable-pill" onclick="selectCable(this, 'Crossover', '#fb923c')">
+        <div class="cable-dot" style="background:#fb923c;"></div> מוצלב (Crossover)
       </div>
-      <div class="cable-pill" onclick="selectCable(this, 'PoE (Green)', '#2ea043')">
-        <div class="cable-dot" style="background:#2ea043;"></div> כבל PoE (ירוק)
+      <div class="cable-pill" onclick="selectCable(this, 'Rollover Console', '#c084fc')">
+        <div class="cable-dot" style="background:#c084fc;"></div> קונסול (Console)
       </div>
-      <div class="cable-pill" onclick="selectCable(this, 'Console / Mgmt (Grey)', '#c084fc')">
-        <div class="cable-dot" style="background:#c084fc;"></div> קונסול (Console/אפור)
-      </div>
-      <div class="cable-pill" onclick="selectCable(this, 'Power (Black)', '#484f58')">
-        <div class="cable-dot" style="background:#484f58;"></div> כבל חשמל (שחור)
+      <div class="cable-pill" onclick="selectCable(this, 'Fiber Optic', '#f1c40f')">
+        <div class="cable-dot" style="background:#f1c40f;"></div> סיב אופטי (Fiber)
       </div>
     </div>
     <div>💡 טיפ: חבר כבל קונסול מ-PC לראוטר, הגדר כתובות IP לבד, ולחץ על "סיימתי לחווט" לקבלת דוח טופולוגיה!</div>
@@ -805,7 +802,7 @@
   </div>
 
   <script>
-    let activeCable = 'LAN (Blue)';
+    let activeCable = 'Straight-Through';
     let activeCableColor = '#38bdf8';
     let selectedPortElem = null;
     let selectedPortDetails = null;
@@ -1256,8 +1253,8 @@
     }
 
     const labTasks = [
-      { id: 1, title: "1. חיבור ראוטר לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל LAN מ-g0/0/0 בראוטר ל-Fa0/1 בסוויץ'", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('Router') && c.dev2.includes('Switch')) || (c.dev2.includes('Router') && c.dev1.includes('Switch'))) },
-      { id: 2, title: "2. חיבור PC1 לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל LAN מ-ETH0 ב-PC1 ל-Fa0/2 בסוויץ'", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('PC') && c.dev2.includes('Switch')) || (c.dev2.includes('PC') && c.dev1.includes('Switch'))) },
+      { id: 1, title: "1. חיבור ראוטר לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל ישר מ-g0/0/0 בראוטר ל-Fa0/1 בסוויץ'", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('Router') && c.dev2.includes('Switch')) || (c.dev2.includes('Router') && c.dev1.includes('Switch'))) },
+      { id: 2, title: "2. חיבור PC1 לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל ישר מ-ETH0 ב-PC1 ל-Fa0/2 בסוויץ'", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('PC') && c.dev2.includes('Switch')) || (c.dev2.includes('PC') && c.dev1.includes('Switch'))) },
       { id: 3, title: "3. חיבור Console ב-PuTTY", diff: "Easy", diffClass: "diff-easy", phys: "כבל קונסול מ-RS232 ב-PC1 ל-Console בראוטר", soft: "התחבר עם COM3", check: () => connections.some(c => c.cableType.includes('Console') || c.color === '#c084fc') },
       { id: 4, title: "4. הגדרת Hostname", diff: "Easy", diffClass: "diff-easy", phys: "אין", soft: "conf t -> hostname R1", check: () => deviceStates['Router1']?.hostnameChanged || executedCommands.some(c => c.cmd.startsWith('hostname')) },
       { id: 5, title: "5. הגדרת IP בראוטר", diff: "Med", diffClass: "diff-med", phys: "אין", soft: "ip address ידני / CLI", check: () => deviceStates['Router1']?.ip !== '' || Object.keys(deviceStates['Router1']?.ips || {}).length > 0 },
