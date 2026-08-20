@@ -160,6 +160,7 @@
       flex-direction: column;
       direction: ltr;
       text-align: left;
+      cursor: text;
     }
 
     .empty-state {
@@ -169,6 +170,32 @@
       font-size: 14px;
       line-height: 1.6;
       direction: rtl;
+    }
+
+    /* Interactive Terminal Input Line */
+    .cli-line {
+      display: flex;
+      align-items: center;
+      margin-top: 4px;
+      direction: ltr;
+    }
+
+    .cli-prompt {
+      color: #38ef7d;
+      font-weight: bold;
+      white-space: pre;
+    }
+
+    .cli-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #38ef7d;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 14px;
+      flex: 1;
+      margin-left: 2px;
+      direction: ltr;
     }
 
     /* Center: Rack Window */
@@ -703,7 +730,7 @@
         <span id="terminalTitle">מסוף תקשורת</span>
         <button class="btn-close-term" onclick="closeTerminal()">✕ סגור</button>
       </div>
-      <div class="terminal-screen" id="terminalScreen">
+      <div class="terminal-screen" id="terminalScreen" onclick="focusCliInput()">
         <div class="empty-state">
           לחץ על <b class="en-term">CLI</b> ברכיב,<br>או על <b class="en-term">PC CMD / PuTTY Serial</b> בתפריט כדי לפתוח מסוף עבודה
         </div>
@@ -711,7 +738,7 @@
     </div>
 
     <!-- 2. Center Area: Network Rack Panel -->
-    <div class="rack-wrapper" id="rackContainer" onscroll="drawAllCables()">
+    <div class="rack-wrapper" id="rackContainer">
 
       <!-- Device 1: Router -->
       <div class="rack-device" id="device-router">
@@ -723,16 +750,16 @@
             <button class="dev-btn btn-ip" onclick="openIPModal('Router1', '192.168.1.1', '255.255.255.0', '192.168.1.1', '8.8.8.8')">🌐 <span class="en-term">IP</span></button>
           </div>
           <div class="device-info">
-            <span class="device-name en-term">Cisco ISR 4331 Gigabit Router</span>
+            <span class="device-name en-term" id="name-Router1">Router1</span>
             <span class="cisco-tag">CISCO</span>
           </div>
         </div>
         <div class="ports-container">
           <div class="ports-row">
-            <div class="port-box purple" onclick="handlePortClick(this, 'Router', 'Console')">Console</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Router', 'g0/0/0')">g0/0/0</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Router', 'g0/0/1')">g0/0/1</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Router', 'Serial0/1/0')">Serial0/1/0</div>
+            <div class="port-box purple" onclick="handlePortClick(this, 'Router1', 'Console')">Console</div>
+            <div class="port-box" onclick="handlePortClick(this, 'Router1', 'g0/0/0')">g0/0/0</div>
+            <div class="port-box" onclick="handlePortClick(this, 'Router1', 'g0/0/1')">g0/0/1</div>
+            <div class="port-box" onclick="handlePortClick(this, 'Router1', 'Serial0/1/0')">Serial0/1/0</div>
           </div>
         </div>
       </div>
@@ -747,18 +774,18 @@
             <button class="dev-btn btn-ip" onclick="openIPModal('Switch1', '192.168.1.2', '255.255.255.0', '192.168.1.1', '8.8.8.8')">🌐 <span class="en-term">IP</span></button>
           </div>
           <div class="device-info">
-            <span class="device-name en-term">Cisco Catalyst 2960 Switch</span>
+            <span class="device-name en-term" id="name-Switch1">Switch1</span>
             <span class="cisco-tag">CISCO</span>
           </div>
         </div>
         <div class="ports-container">
           <div class="ports-row">
-            <div class="port-box purple" onclick="handlePortClick(this, 'Switch', 'Console')">Console</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch', 'Fa0/1')">Fa0/1</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch', 'Fa0/2')">Fa0/2</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch', 'Fa0/3')">Fa0/3</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch', 'Fa0/4')">Fa0/4</div>
-            <div class="port-box yellow" onclick="handlePortClick(this, 'Switch', 'Fiber0/1')">Fiber0/1</div>
+            <div class="port-box purple" onclick="handlePortClick(this, 'Switch1', 'Console')">Console</div>
+            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/1')">Fa0/1</div>
+            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/2')">Fa0/2</div>
+            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/3')">Fa0/3</div>
+            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/4')">Fa0/4</div>
+            <div class="port-box yellow" onclick="handlePortClick(this, 'Switch1', 'Fiber0/1')">Fiber0/1</div>
           </div>
         </div>
       </div>
@@ -773,7 +800,7 @@
             <button class="dev-btn btn-ip" onclick="openIPModal('PC1', '192.168.1.100', '255.255.255.0', '192.168.1.1', '8.8.8.8')">🌐 <span class="en-term">IP</span></button>
           </div>
           <div class="device-info">
-            <span class="device-name en-term">Rack Workstation Server (PC1)</span>
+            <span class="device-name en-term" id="name-PC1">PC1</span>
             <span class="cisco-tag">CISCO</span>
           </div>
         </div>
@@ -880,8 +907,45 @@
     let routerIpConfigured = false;
     let pingExecuted = false;
     let configSaved = false;
+    let hostnameConfigured = false;
+    let interfaceEnabled = false;
+    let defaultGatewaySet = false;
 
-    window.addEventListener('resize', drawAllCables);
+    // CLI Session Engine State
+    let currentDevice = null;
+    let currentTerminalType = null;
+    let cliMode = 'user'; // 'user' (>), 'priv' (#), 'config' (config)#, 'if' (config-if)#, 'cmd' (C:\>)
+    let activeInterface = '';
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    let deviceStates = {
+      'Router1': { name: 'Router1', mode: 'user', ips: {}, intfUp: {} },
+      'Switch1': { name: 'Switch1', mode: 'user', ips: {}, intfUp: {} },
+      'PC1': { name: 'PC1', ip: '192.168.1.100', mask: '255.255.255.0', gw: '192.168.1.1' }
+    };
+
+    // Smooth render setup for Cables
+    let isDrawing = false;
+    function requestCableDraw() {
+      if (!isDrawing) {
+        requestAnimationFrame(() => {
+          drawAllCables();
+          isDrawing = false;
+        });
+        isDrawing = true;
+      }
+    }
+
+    window.addEventListener('resize', requestCableDraw);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const rack = document.getElementById('rackContainer');
+      if (rack) {
+        rack.addEventListener('scroll', requestCableDraw);
+      }
+      requestCableDraw();
+    });
 
     /* Cable Selection */
     function selectCable(cardElem, cableType, color) {
@@ -893,7 +957,7 @@
 
     /* Port Clicking, Cable Connection, and Disconnection Logic */
     function handlePortClick(portElem, deviceName, portName) {
-      // 1. DISCONNECT LOGIC - If port is already connected
+      // 1. DISCONNECT LOGIC
       const existingConnIndex = connections.findIndex(c => c.elem1 === portElem || c.elem2 === portElem);
 
       if (existingConnIndex !== -1) {
@@ -903,11 +967,9 @@
           conn.elem2.classList.remove('connected-port');
 
           connections.splice(existingConnIndex, 1);
-          drawAllCables();
+          requestCableDraw();
 
-          openTerminal('Cisco CLI', deviceName);
-          const screen = document.getElementById('terminalScreen');
-          screen.innerHTML += `\n%LINK-3-UPDOWN: Interface ${portName}, changed state to down\n`;
+          appendTerminalOutput(`\n%LINK-3-UPDOWN: Interface ${portName}, changed state to down\n`);
         }
         return;
       }
@@ -928,6 +990,10 @@
         const port1 = selectedPortElem;
         const port2 = portElem;
 
+        if (activeCable === 'Rollover Console' && (!portName.includes('Console') && !selectedPortDetails.portName.includes('RS232'))) {
+          alert('אזהרת CCNA: כבל Console מיועד לחיבור בין יציאת RS232/Serial במחשב לבין פורט Console במכשיר!');
+        }
+
         port1.classList.remove('selected-port');
         port1.classList.add('connected-port');
         port2.classList.add('connected-port');
@@ -944,11 +1010,9 @@
         };
 
         connections.push(conn);
-        drawAllCables();
+        requestCableDraw();
 
-        openTerminal('Cisco CLI', deviceName);
-        const screen = document.getElementById('terminalScreen');
-        screen.innerHTML += `\n%LINK-5-CHANGED: Interface ${portName}, changed state to up\n`;
+        appendTerminalOutput(`\n%LINK-5-CHANGED: Interface ${portName}, changed state to up\n`);
 
         // Reset Selection
         selectedPortElem = null;
@@ -959,6 +1023,7 @@
     /* Draw Cable Lines on SVG Overlay */
     function drawAllCables() {
       const svg = document.getElementById('cableSvgContainer');
+      if (!svg) return;
       svg.innerHTML = ''; 
 
       const appRect = document.getElementById('appBodyContainer').getBoundingClientRect();
@@ -1001,7 +1066,7 @@
       document.getElementById('winModalOverlay').style.display = 'none';
     }
 
-    /* Evaluate Tasks */
+    /* Evaluate 10 Lab Tasks */
     function evaluateTasks() {
       return [
         {
@@ -1032,18 +1097,33 @@
         },
         {
           title: "משימה 5: הגדרת IP בראוטר",
-          desc: "פתח מסוף PuTTY והגדר IP בממשק הרשת.",
+          desc: "פתח מסוף PuTTY/CLI והגדר IP בממשק הרשת.",
           check: () => routerIpConfigured
         },
         {
-          title: "משימה 6: בדיקת תקינות Ping",
+          title: "משימה 6: הפעלת ממשק הרשת (no shutdown)",
+          desc: "ודא שממשק הרשת בראוטר הופעל בהצלחה (no shutdown).",
+          check: () => interfaceEnabled
+        },
+        {
+          title: "משימה 7: הגדרת Hostname לרכיב",
+          desc: "שנה את שם הראוטר/הסוויץ' ב-CLI בעזרת פקודת hostname.",
+          check: () => hostnameConfigured
+        },
+        {
+          title: "משימה 8: הגדרת Default Gateway",
+          desc: "הגדר כתובת שער ברירת מחדל בהגדרות הרשת ב-PC.",
+          check: () => defaultGatewaySet || pcIpSaved
+        },
+        {
+          title: "משימה 9: בדיקת תקינות Ping",
           desc: "פתח PC CMD והרץ פינג לראוטר.",
           check: () => pingExecuted
         },
         {
-          title: "משימה 7: הוספת רכיב ושמירת קונפיגורציה",
-          desc: "הוסף רכיב חדש לארון או הרץ פקודת שמירה במסוף.",
-          check: () => configSaved || connections.length >= 3
+          title: "משימה 10: שמירת קונפיגורציה",
+          desc: "הרצת פקודת שמירה (write memory / copy run start) במסוף.",
+          check: () => configSaved
         }
       ];
     }
@@ -1089,11 +1169,12 @@
 
     /* IP Properties */
     function openIPModal(deviceName, ip, mask, gateway, dns) {
+      const state = deviceStates[deviceName] || { ip, mask, gw: gateway };
       const bodyContent = `
         <div class="win-modal-subtitle">הגדרת רשת: <strong class="en-term">${deviceName}</strong></div>
-        <div class="win-ip-form-row"><input type="text" id="modalIpInput" value="${ip}"><label>:IP Address</label></div>
-        <div class="win-ip-form-row"><input type="text" value="${mask}"><label>:Subnet Mask</label></div>
-        <div class="win-ip-form-row"><input type="text" value="${gateway}"><label>:Gateway</label></div>
+        <div class="win-ip-form-row"><input type="text" id="modalIpInput" value="${state.ip || ip}"><label>:IP Address</label></div>
+        <div class="win-ip-form-row"><input type="text" value="${state.mask || mask}"><label>:Subnet Mask</label></div>
+        <div class="win-ip-form-row"><input type="text" id="modalGwInput" value="${state.gw || gateway}"><label>:Gateway</label></div>
         <div class="win-modal-footer">
           <button class="btn-win-ok" onclick="saveIPSettings('${deviceName}')">אישור</button>
           <button class="btn-win-cancel" onclick="closeWinModal()">ביטול</button>
@@ -1105,9 +1186,16 @@
     function saveIPSettings(deviceName) {
       if(deviceName.includes('PC')) pcIpSaved = true;
       const newIp = document.getElementById('modalIpInput').value;
+      const newGw = document.getElementById('modalGwInput')?.value;
+      if (newGw) defaultGatewaySet = true;
+
+      if (!deviceStates[deviceName]) deviceStates[deviceName] = {};
+      deviceStates[deviceName].ip = newIp;
+      deviceStates[deviceName].gw = newGw;
+
       closeWinModal();
       openTerminal('PC CMD', deviceName);
-      document.getElementById('terminalScreen').innerHTML += `\n[SYSTEM] IP updated: ${newIp}\nC:\\> `;
+      appendTerminalOutput(`\n[SYSTEM] IP updated successfully: ${newIp}\n`);
     }
 
     /* Topology Viewer */
@@ -1116,31 +1204,216 @@
         <div class="win-modal-subtitle">מפת כבלים מחוברים</div>
         <div style="background:#111; color:#38ef7d; padding:15px; border-radius:4px; font-family:monospace; direction:ltr; text-align:left;">
           Total Active Links: ${connections.length}<br>
-          ${connections.map(c => `[${c.dev1} - ${c.port1Name}] <-> [${c.dev2} - ${c.port2Name}] (${c.cableType})`).join('<br>')}
+          ${connections.length === 0 ? 'No active connections.' : connections.map(c => `[${c.dev1} - ${c.port1Name}] <-> [${c.dev2} - ${c.port2Name}] (${c.cableType})`).join('<br>')}
         </div>
         <div class="win-modal-footer"><button class="btn-win-ok" onclick="closeWinModal()">אישור</button></div>
       `;
       openWinModal('Topology Viewer', content);
     }
 
-    /* Terminals */
+    /* Interactive Terminal Engine */
     function openTerminal(type, deviceName) {
+      currentDevice = deviceName;
+      currentTerminalType = type;
+
+      if (!deviceStates[deviceName]) {
+        deviceStates[deviceName] = { name: deviceName, mode: 'user', ips: {}, intfUp: {} };
+      }
+
       const title = document.getElementById('terminalTitle');
       const screen = document.getElementById('terminalScreen');
       title.innerText = `${type} - ${deviceName}`;
 
-      if (type.includes('PuTTY')) {
-        routerIpConfigured = true; configSaved = true;
-        screen.innerHTML = `--- PuTTY Serial Connection ---\nRouter> enable\nRouter# conf t\nRouter(config)# interface g0/0/0\nRouter(config-if)# ip address 192.168.1.1 255.255.255.0\nRouter(config-if)# no shutdown\n%LINK-5-UP: Interface g0/0/0, state to up\n`;
-      } else if (type.includes('CMD')) {
-        pingExecuted = true;
-        screen.innerHTML = `C:\\> ping 192.168.1.1\n\nReply from 192.168.1.1: bytes=32 time=1ms TTL=255\nReply from 192.168.1.1: bytes=32 time=1ms TTL=255\n\nC:\\> `;
+      if (type.includes('CMD')) {
+        cliMode = 'cmd';
+        screen.innerHTML = `Microsoft Windows [Version 10.0.19045.3803]\n(c) Microsoft Corporation. All rights reserved.\n\n`;
       } else {
-        screen.innerHTML = `Connecting to ${deviceName}...\n\n${deviceName}> show ip int brief\n`;
+        cliMode = deviceStates[deviceName].mode || 'user';
+        screen.innerHTML = `Press RETURN to get started!\n\nUser Access Verification\n\n`;
+      }
+
+      renderCliPrompt();
+    }
+
+    function getPromptString() {
+      if (!currentDevice) return '> ';
+      const devName = deviceStates[currentDevice]?.name || currentDevice;
+
+      if (cliMode === 'cmd') return `C:\\Users\\Student> `;
+      if (cliMode === 'user') return `${devName}> `;
+      if (cliMode === 'priv') return `${devName}# `;
+      if (cliMode === 'config') return `${devName}(config)# `;
+      if (cliMode === 'if') return `${devName}(config-if)# `;
+      return `${devName}> `;
+    }
+
+    function renderCliPrompt() {
+      const screen = document.getElementById('terminalScreen');
+      const existingInput = document.getElementById('activeCliInput');
+      if (existingInput) existingInput.parentElement.remove();
+
+      const line = document.createElement('div');
+      line.className = 'cli-line';
+
+      const promptSpan = document.createElement('span');
+      promptSpan.className = 'cli-prompt';
+      promptSpan.innerText = getPromptString();
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'cli-input';
+      input.id = 'activeCliInput';
+      input.autocomplete = 'off';
+      input.spellcheck = false;
+
+      input.addEventListener('keydown', handleCliKeyDown);
+
+      line.appendChild(promptSpan);
+      line.appendChild(input);
+      screen.appendChild(line);
+
+      setTimeout(() => input.focus(), 50);
+      screen.scrollTop = screen.scrollHeight;
+    }
+
+    function focusCliInput() {
+      const input = document.getElementById('activeCliInput');
+      if (input) input.focus();
+    }
+
+    function appendTerminalOutput(text) {
+      const screen = document.getElementById('terminalScreen');
+      const activeLine = document.querySelector('.cli-line');
+
+      if (activeLine) {
+        const textNode = document.createTextNode(text);
+        screen.insertBefore(textNode, activeLine);
+      } else {
+        screen.innerHTML += text;
+      }
+      screen.scrollTop = screen.scrollHeight;
+    }
+
+    function handleCliKeyDown(e) {
+      if (e.key === 'Enter') {
+        const cmd = e.target.value.trim();
+        const promptStr = getPromptString();
+
+        const oldLine = e.target.parentElement;
+        oldLine.innerHTML = `<span class="cli-prompt">${promptStr}</span><span>${e.target.value}</span>`;
+
+        if (cmd !== '') {
+          commandHistory.push(cmd);
+          historyIndex = commandHistory.length;
+          processCiscoCommand(cmd);
+        }
+
+        renderCliPrompt();
+      } else if (e.key === 'ArrowUp') {
+        if (historyIndex > 0) {
+          historyIndex--;
+          e.target.value = commandHistory[historyIndex];
+        }
+      } else if (e.key === 'ArrowDown') {
+        if (historyIndex < commandHistory.length - 1) {
+          historyIndex++;
+          e.target.value = commandHistory[historyIndex];
+        } else {
+          historyIndex = commandHistory.length;
+          e.target.value = '';
+        }
       }
     }
 
+    function processCiscoCommand(cmd) {
+      const lower = cmd.toLowerCase();
+      const dev = deviceStates[currentDevice];
+
+      // Windows CMD Commands
+      if (cliMode === 'cmd') {
+        if (lower.startsWith('ping')) {
+          pingExecuted = true;
+          const target = cmd.split(' ')[1] || '192.168.1.1';
+          appendTerminalOutput(`Pinging ${target} with 32 bytes of data:\nReply from ${target}: bytes=32 time=1ms TTL=255\nReply from ${target}: bytes=32 time=1ms TTL=255\nReply from ${target}: bytes=32 time=1ms TTL=255\nReply from ${target}: bytes=32 time=1ms TTL=255\n\nPing statistics for ${target}:\n    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)\n`);
+        } else if (lower === 'ipconfig') {
+          appendTerminalOutput(`\nEthernet adapter Ethernet0:\n   IPv4 Address. . . . . . . . . . . : ${dev.ip || '192.168.1.100'}\n   Subnet Mask . . . . . . . . . . . : ${dev.mask || '255.255.255.0'}\n   Default Gateway . . . . . . . . . : ${dev.gw || '192.168.1.1'}\n\n`);
+        } else if (lower === 'cls' || lower === 'clear') {
+          document.getElementById('terminalScreen').innerHTML = '';
+        } else {
+          appendTerminalOutput(`'${cmd}' is not recognized as an internal or external command.\n`);
+        }
+        return;
+      }
+
+      // Cisco IOS Commands
+      if (lower === 'enable' || lower === 'en') {
+        cliMode = 'priv';
+      } else if (lower === 'configure terminal' || lower === 'conf t') {
+        if (cliMode === 'priv') cliMode = 'config';
+        else appendTerminalOutput(`% Command invalid in current mode.\n`);
+      } else if (lower.startsWith('interface') || lower.startsWith('int')) {
+        if (cliMode === 'config' || cliMode === 'if') {
+          cliMode = 'if';
+          activeInterface = cmd.split(' ')[1] || 'g0/0/0';
+          appendTerminalOutput(`Entering interface configuration mode for ${activeInterface}\n`);
+        } else {
+          appendTerminalOutput(`% Enter configuration commands first.\n`);
+        }
+      } else if (lower.startsWith('ip address') || lower.startsWith('ip add')) {
+        if (cliMode === 'if') {
+          const parts = cmd.split(' ');
+          if (parts.length >= 4) {
+            if (!dev.ips) dev.ips = {};
+            dev.ips[activeInterface] = parts[2];
+            if (currentDevice.includes('Router')) routerIpConfigured = true;
+            appendTerminalOutput(`Configured IP ${parts[2]} on ${activeInterface}\n`);
+          } else {
+            appendTerminalOutput(`% Incomplete command.\n`);
+          }
+        } else {
+          appendTerminalOutput(`% Command allowed only in interface mode.\n`);
+        }
+      } else if (lower === 'no shutdown' || lower === 'no shut') {
+        if (cliMode === 'if') {
+          interfaceEnabled = true;
+          if (!dev.intfUp) dev.intfUp = {};
+          dev.intfUp[activeInterface] = true;
+          appendTerminalOutput(`%LINK-5-CHANGED: Interface ${activeInterface}, changed state to up\n%LINEPROTO-5-UPDOWN: Line protocol on Interface ${activeInterface}, changed state to up\n`);
+        } else {
+          appendTerminalOutput(`% Command allowed only in interface mode.\n`);
+        }
+      } else if (lower.startsWith('hostname ')) {
+        if (cliMode === 'config' || cliMode === 'if') {
+          const newName = cmd.split(' ')[1];
+          if (newName) {
+            dev.name = newName;
+            hostnameConfigured = true;
+            const labelElem = document.getElementById(`name-${currentDevice}`);
+            if (labelElem) labelElem.innerText = newName;
+          }
+        }
+      } else if (lower === 'exit') {
+        if (cliMode === 'if') cliMode = 'config';
+        else if (cliMode === 'config') cliMode = 'priv';
+        else if (cliMode === 'priv') cliMode = 'user';
+      } else if (lower === 'end') {
+        cliMode = 'priv';
+      } else if (lower === 'write memory' || lower === 'wr' || lower === 'copy run start') {
+        configSaved = true;
+        appendTerminalOutput(`Building configuration...\n[OK]\n`);
+      } else if (lower.startsWith('show ip interface brief') || lower === 'sh ip int br') {
+        appendTerminalOutput(`Interface              IP-Address      OK? Method Status                Protocol\nGigabitEthernet0/0/0   ${dev.ips?.['g0/0/0'] || 'unassigned'}  YES manual ${dev.intfUp?.['g0/0/0'] ? 'up' : 'administratively down'} ${dev.intfUp?.['g0/0/0'] ? 'up' : 'down'}\nGigabitEthernet0/0/1   ${dev.ips?.['g0/0/1'] || 'unassigned'}  YES manual administratively down down\nFastEthernet0/1        ${dev.ips?.['Fa0/1'] || 'unassigned'}  YES manual up                   up\n`);
+      } else if (lower === 'clear' || lower === 'cls') {
+        document.getElementById('terminalScreen').innerHTML = '';
+      } else {
+        appendTerminalOutput(`% Unknown command or computer name, or unable to find shortcut: "${cmd}"\n`);
+      }
+
+      dev.mode = cliMode;
+    }
+
     function closeTerminal() {
+      currentDevice = null;
       document.getElementById('terminalTitle').innerText = 'מסוף תקשורת';
       document.getElementById('terminalScreen').innerHTML = `<div class="empty-state">לחץ על רכיב כדי לפתוח מסוף עבודה</div>`;
     }
@@ -1151,9 +1424,19 @@
         const elem = document.getElementById(deviceId);
         if (elem) {
           const ports = elem.querySelectorAll('.port-box');
+          
+          connections.forEach(conn => {
+            if (Array.from(ports).includes(conn.elem1)) {
+              conn.elem2.classList.remove('connected-port', 'selected-port');
+            }
+            if (Array.from(ports).includes(conn.elem2)) {
+              conn.elem1.classList.remove('connected-port', 'selected-port');
+            }
+          });
+
           connections = connections.filter(conn => !Array.from(ports).includes(conn.elem1) && !Array.from(ports).includes(conn.elem2));
           elem.remove();
-          drawAllCables();
+          requestCableDraw();
         }
       }
     }
@@ -1162,15 +1445,20 @@
       const rack = document.getElementById('rackContainer');
       const id = 'dev-' + Date.now();
       const num = rack.children.length + 1;
+      const devName = `${type}${num}`;
       let html = '';
+
+      deviceStates[devName] = { name: devName, mode: 'user', ips: {}, intfUp: {} };
+
       if (type === 'Router') {
-        html = `<div class="rack-device" id="${id}"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">🗑 מחק</button></div><div class="device-info"><span class="device-name en-term">Router${num}</span><span class="cisco-tag">CISCO</span></div></div><div class="ports-container"><div class="ports-row"><div class="port-box" onclick="handlePortClick(this, 'Router${num}', 'g0/0')">g0/0</div><div class="port-box" onclick="handlePortClick(this, 'Router${num}', 'g0/1')">g0/1</div></div></div></div>`;
+        html = `<div class="rack-device" id="${id}"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">🗑 מחק</button><button class="dev-btn btn-cli" onclick="openTerminal('Cisco CLI', '${devName}')">💻 <span class="en-term">CLI</span></button></div><div class="device-info"><span class="device-name en-term" id="name-${devName}">${devName}</span><span class="cisco-tag">CISCO</span></div></div><div class="ports-container"><div class="ports-row"><div class="port-box purple" onclick="handlePortClick(this, '${devName}', 'Console')">Console</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'g0/0')">g0/0</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'g0/1')">g0/1</div></div></div></div>`;
       } else if (type === 'Switch') {
-        html = `<div class="rack-device" id="${id}"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">🗑 מחק</button></div><div class="device-info"><span class="device-name en-term">Switch${num}</span><span class="cisco-tag">CISCO</span></div></div><div class="ports-container"><div class="ports-row"><div class="port-box" onclick="handlePortClick(this, 'Switch${num}', 'Fa0/1')">Fa0/1</div><div class="port-box" onclick="handlePortClick(this, 'Switch${num}', 'Fa0/2')">Fa0/2</div></div></div></div>`;
+        html = `<div class="rack-device" id="${id}"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">🗑 מחק</button><button class="dev-btn btn-cli" onclick="openTerminal('Cisco CLI', '${devName}')">💻 <span class="en-term">CLI</span></button></div><div class="device-info"><span class="device-name en-term" id="name-${devName}">${devName}</span><span class="cisco-tag">CISCO</span></div></div><div class="ports-container"><div class="ports-row"><div class="port-box purple" onclick="handlePortClick(this, '${devName}', 'Console')">Console</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'Fa0/1')">Fa0/1</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'Fa0/2')">Fa0/2</div></div></div></div>`;
       } else {
-        html = `<div class="rack-device" id="${id}"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">🗑 מחק</button></div><div class="device-info"><span class="device-name en-term">PC${num}</span><span class="cisco-tag">CISCO</span></div></div><div class="ports-container"><div class="ports-row"><div class="port-box" onclick="handlePortClick(this, 'PC${num}', 'ETH0')">ETH0</div></div></div></div>`;
+        html = `<div class="rack-device" id="${id}"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">🗑 מחק</button><button class="dev-btn btn-cli" onclick="openTerminal('PC CMD', '${devName}')">💻 <span class="en-term">CLI</span></button></div><div class="device-info"><span class="device-name en-term" id="name-${devName}">${devName}</span><span class="cisco-tag">CISCO</span></div></div><div class="ports-container"><div class="ports-row"><div class="port-box purple" onclick="handlePortClick(this, '${devName}', 'RS232')">RS232</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'ETH0')">ETH0</div></div></div></div>`;
       }
       rack.insertAdjacentHTML('beforeend', html);
+      requestCableDraw();
     }
 
     function resetSimulator() {
