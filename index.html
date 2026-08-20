@@ -69,6 +69,7 @@
     .btn-top:hover { opacity: 0.9; }
     .btn-reset { background-color: var(--btn-red); }
     .btn-topo { background-color: #374151; }
+    .btn-done-topo { background: linear-gradient(135deg, #238636, #2ea043) !important; border: 1px solid #3fb950 !important; box-shadow: 0 0 10px rgba(46,160,67,0.4); }
 
     /* Spinning Avatar in Header */
     .header-title-container { display: flex; align-items: center; gap: 10px; }
@@ -377,7 +378,7 @@
     .custom-modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(4, 9, 20, 0.82);
+      background: rgba(4, 9, 20, 0.85);
       backdrop-filter: blur(6px);
       display: none;
       align-items: center;
@@ -395,9 +396,12 @@
       background: #161b22;
       border: 1px solid #30363d;
       border-radius: 12px;
-      width: 540px;
-      max-width: 92%;
+      width: 720px;
+      max-width: 95%;
+      max-height: 90vh;
       box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 1px #58a6ff;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       color: #c9d1d9;
     }
@@ -408,6 +412,7 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid #30363d;
+      flex-shrink: 0;
     }
 
     .banner-success { background: linear-gradient(135deg, #1b4721, #0f2d15); border-color: #2ea043; }
@@ -442,6 +447,8 @@
       padding: 20px;
       font-size: 13px;
       line-height: 1.6;
+      overflow-y: auto;
+      flex: 1;
     }
 
     .feedback-box-section {
@@ -469,6 +476,7 @@
       border-top: 1px solid #21262d;
       display: flex;
       justify-content: flex-end;
+      flex-shrink: 0;
     }
 
     .btn-modal-action {
@@ -482,6 +490,22 @@
       cursor: pointer;
     }
     .btn-modal-action:hover { background: #2ea043; }
+
+    /* Tables for Topology Modal */
+    .topo-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 11px;
+      font-family: monospace;
+      direction: ltr;
+    }
+    .topo-table th, .topo-table td {
+      border: 1px solid #30363d;
+      padding: 6px 8px;
+      text-align: left;
+    }
+    .topo-table th { background: #161b22; color: #58a6ff; }
   </style>
 </head>
 <body>
@@ -490,6 +514,7 @@
     <div class="top-tools">
       <button class="btn-top btn-reset" onclick="resetSimulator()">איפוס מעבדה</button>
       <button class="btn-top btn-topo" onclick="openTopologyModal()">📖 מפת כבלים</button>
+      <button class="btn-top btn-done-topo" onclick="openFullTopologyReport()">🚀 סיימתי לחווט, מה הטופולוגיה?</button>
       <button class="btn-top" style="background:#238636;" onclick="addDevice('Router')">+ ראוטר</button>
       <button class="btn-top" style="background:#238636;" onclick="addDevice('Switch')">+ סוויץ'</button>
       <button class="btn-top" style="background:#0969da;" onclick="addDevice('PC')">+ מחשב PC</button>
@@ -497,7 +522,7 @@
 
     <div class="header-title-container">
       <div style="font-weight: bold; font-size: 13px;">מעבדת תקשורת CCNA - Dashboard אחוד</div>
-      <img src="https://lh3.googleusercontent.com/d/1t9QaPCKLvtAhWncetA83ALY8EIvpnFte" class="crazy-avatar-img" alt="Crazy Avatar" onclick="alert('🤖: מה קורה אחי? עקוב אחרי סרגל המשימות מימין!')">
+      <img src="https://lh3.googleusercontent.com/d/1t9QaPCKLvtAhWncetA83ALY8EIvpnFte" class="crazy-avatar-img" alt="Crazy Avatar" onclick="alert('🤖: מה קורה אחי? הגדר כתובות IP לבד וחבר קונסול אמיתי ב-PuTTY!')">
     </div>
   </header>
 
@@ -507,9 +532,7 @@
     <!-- Column 1: Tasks Side Panel (Right) -->
     <div class="tasks-panel">
       <div class="panel-title">🏆 10 משימות מעבדה</div>
-      <div id="tasksListContainer">
-        <!-- Tasks inject dynamically -->
-      </div>
+      <div id="tasksListContainer"></div>
     </div>
 
     <!-- Column 2: Center Rack Cabinet -->
@@ -521,8 +544,8 @@
           <div class="device-buttons">
             <button class="dev-btn btn-delete" onclick="deleteDevice('device-router')">מחק</button>
             <button class="dev-btn btn-addport" onclick="addPortToDevice('device-router', 'Router')">+ פורט</button>
-            <button class="dev-btn btn-cli" onclick="openTerminal('PuTTY Console Session (COM3)', 'Router1')">PuTTY CLI</button>
-            <button class="dev-btn btn-ip" onclick="openIPModal('Router1', '192.168.1.1')">IP</button>
+            <button class="dev-btn btn-cli" onclick="promptPuttyConnection('Router1')">PuTTY CLI</button>
+            <button class="dev-btn btn-ip" onclick="openManualIPModal('Router1')">IP</button>
           </div>
           <div class="device-info">
             <div class="led-indicator"></div>
@@ -544,7 +567,8 @@
           <div class="device-buttons">
             <button class="dev-btn btn-delete" onclick="deleteDevice('device-switch')">מחק</button>
             <button class="dev-btn btn-addport" onclick="addPortToDevice('device-switch', 'Switch')">+ פורט</button>
-            <button class="dev-btn btn-cli" onclick="openTerminal('PuTTY Telnet/SSH', 'Switch1')">PuTTY CLI</button>
+            <button class="dev-btn btn-cli" onclick="promptPuttyConnection('Switch1')">PuTTY CLI</button>
+            <button class="dev-btn btn-ip" onclick="openManualIPModal('Switch1')">IP</button>
           </div>
           <div class="device-info">
             <div class="led-indicator"></div>
@@ -566,8 +590,8 @@
         <div class="device-title-bar">
           <div class="device-buttons">
             <button class="dev-btn btn-delete" onclick="deleteDevice('device-pc')">מחק</button>
-            <button class="dev-btn btn-cli" onclick="openTerminal('PC Windows CMD / PuTTY Terminal', 'PC1')">Terminal</button>
-            <button class="dev-btn btn-ip" onclick="openIPModal('PC1', '192.168.1.100')">IP</button>
+            <button class="dev-btn btn-cli" onclick="openTerminal('PC Windows CMD', 'PC1')">Terminal</button>
+            <button class="dev-btn btn-ip" onclick="openManualIPModal('PC1')">IP</button>
           </div>
           <div class="device-info">
             <div class="led-indicator"></div>
@@ -587,11 +611,11 @@
     <!-- Column 3: Terminal Panel (Left) -->
     <div class="terminal-container">
       <div class="terminal-header">
-        <span id="terminalTitle">PuTTY - Serial COM3 (9600 baud)</span>
+        <span id="terminalTitle">PuTTY - Serial Terminal</span>
         <button class="btn-top btn-reset" style="padding:1px 5px; font-size:9px;" onclick="closeTerminal()">✕</button>
       </div>
       <div class="terminal-screen" id="terminalScreen" onclick="focusCliInput()">
-        <div style="color:#8b949e; text-align:center; margin-top:20px;">[PuTTY Terminal Ready] לחץ על כפתור CLI באחד הרכיבים או חבר כבל קונסול כדי להתחיל לעבוד</div>
+        <div style="color:#8b949e; text-align:center; margin-top:20px;">[PuTTY Terminal Ready] לחץ על כפתור CLI באחד הרכיבים כדי להתחבר בפורט סיריאלי (COM)</div>
       </div>
     </div>
 
@@ -614,7 +638,7 @@
         <div class="cable-dot" style="background:#f1c40f;"></div> סיב אופטי (Fiber)
       </div>
     </div>
-    <div>💡 טיפ: לחץ על פורט מקור ופורט יעד ליצירת חיבור. גרירת מכשיר בארון מעוותת את הכבל באופן ריאליסטי!</div>
+    <div>💡 טיפ: חבר כבל קונסול מ-PC לראוטר, הגדר כתובות IP לבד, ולחץ על "סיימתי לחווט" לקבלת דוח טופולוגיה!</div>
   </div>
 
   <!-- Floating Crazy Bot -->
@@ -632,9 +656,7 @@
         </div>
         <button class="modal-close-btn" onclick="closeCustomModal()">✕</button>
       </div>
-      <div class="modal-body-content" id="modalBodyContent">
-        <!-- Dynamic Content Injected Here -->
-      </div>
+      <div class="modal-body-content" id="modalBodyContent"></div>
       <div class="modal-footer-bar">
         <button class="btn-modal-action" onclick="closeCustomModal()">הבנתי, המשך עבודה</button>
       </div>
@@ -648,15 +670,16 @@
     let selectedPortDetails = null;
     let connections = [];
 
-    const ciscoCommands = ['enable', 'configure terminal', 'interface', 'ip address', 'no shutdown', 'hostname', 'write memory', 'exit', 'end', 'ping', 'cls'];
+    const ciscoCommands = ['enable', 'configure terminal', 'interface', 'ip address', 'no shutdown', 'hostname', 'write memory', 'exit', 'end', 'ping', 'cls', 'vlan', 'trunk', 'switchport mode access', 'switchport mode trunk', 'access-list', 'ip nat'];
     let currentDevice = null;
     let cliMode = 'user';
     let executedCommands = [];
 
+    // התלמיד מגדיר כתובות לבד מאפס (אין ערכים מוגדרים מראש)
     let deviceStates = {
-      'Router1': { name: 'Router1', mode: 'user', ips: {}, intfUp: {}, hostnameChanged: false, saved: false },
-      'Switch1': { name: 'Switch1', mode: 'user', ips: {}, intfUp: {}, hostnameChanged: false, saved: false },
-      'PC1': { name: 'PC1', ip: '192.168.1.100', mask: '255.255.255.0', gw: '192.168.1.1' }
+      'Router1': { name: 'Router1', mode: 'user', ips: {}, intfUp: {}, hostnameChanged: false, saved: false, vlans: [1], trunks: [], acls: [], natEnabled: false },
+      'Switch1': { name: 'Switch1', mode: 'user', ips: {}, intfUp: {}, hostnameChanged: false, saved: false, vlans: [1], trunks: [], macTable: [] },
+      'PC1': { name: 'PC1', ip: '', mask: '', gw: '' }
     };
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -758,7 +781,6 @@
       }
     }
 
-    // Dynamic cable rendering with realistic real-time distortion tracking
     function drawAllCables() {
       const svg = document.getElementById('cableSvgContainer');
       if (!svg) return;
@@ -777,7 +799,6 @@
         const y2 = rect2.top + rect2.height / 2 - appRect.top;
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        // Realistic slack & gravitational sag formula for cable curving
         const dx = Math.abs(x2 - x1) * 0.5;
         const dy = (y2 - y1) * 0.2;
         const d = `M ${x1} ${y1} C ${x1 - dx - 20} ${y1 + dy + 40}, ${x2 - dx - 20} ${y2 - dy + 40}, ${x2} ${y2}`;
@@ -793,11 +814,8 @@
       });
     }
 
-    // Continuous animation loop for real-time cable bending during rack dragging
     function animationLoop() {
-      if (connections.length > 0) {
-        drawAllCables();
-      }
+      if (connections.length > 0) drawAllCables();
       requestAnimationFrame(animationLoop);
     }
     requestAnimationFrame(animationLoop);
@@ -808,15 +826,15 @@
       const count = rack.querySelectorAll('.rack-device').length + 1;
       const devName = `${type}${count}`;
 
-      deviceStates[devName] = { name: devName, mode: 'user', ips: {}, intfUp: {} };
+      deviceStates[devName] = { name: devName, mode: 'user', ips: {}, intfUp: {}, vlans: [1], trunks: [] };
 
       let html = '';
       if (type === 'Router') {
-        html = `<div class="rack-device device-router-style" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-addport" onclick="addPortToDevice('${id}', 'Router')">+ פורט</button><button class="dev-btn btn-cli" onclick="openTerminal('PuTTY Console Session', '${devName}')">PuTTY CLI</button></div><div class="device-info"><div class="led-indicator"></div><span class="device-name" id="name-${devName}">[1U] CISCO ${devName}</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'Console')">Con</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'g0/0')">g0/0</div></div></div></div>`;
+        html = `<div class="rack-device device-router-style" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-addport" onclick="addPortToDevice('${id}', 'Router')">+ פורט</button><button class="dev-btn btn-cli" onclick="promptPuttyConnection('${devName}')">PuTTY CLI</button><button class="dev-btn btn-ip" onclick="openManualIPModal('${devName}')">IP</button></div><div class="device-info"><div class="led-indicator"></div><span class="device-name" id="name-${devName}">[1U] CISCO ${devName}</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'Console')">Con</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'g0/0')">g0/0</div></div></div></div>`;
       } else if (type === 'Switch') {
-        html = `<div class="rack-device device-switch-style" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-addport" onclick="addPortToDevice('${id}', 'Switch')">+ פורט</button><button class="dev-btn btn-cli" onclick="openTerminal('PuTTY Telnet Session', '${devName}')">PuTTY CLI</button></div><div class="device-info"><div class="led-indicator"></div><span class="device-name" id="name-${devName}">[1U] CATALYST ${devName}</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'Console')">Con</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'Fa0/1')">F0/1</div></div></div></div>`;
+        html = `<div class="rack-device device-switch-style" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-addport" onclick="addPortToDevice('${id}', 'Switch')">+ פורט</button><button class="dev-btn btn-cli" onclick="promptPuttyConnection('${devName}')">PuTTY CLI</button><button class="dev-btn btn-ip" onclick="openManualIPModal('${devName}')">IP</button></div><div class="device-info"><div class="led-indicator"></div><span class="device-name" id="name-${devName}">[1U] CATALYST ${devName}</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'Console')">Con</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'Fa0/1')">F0/1</div></div></div></div>`;
       } else {
-        html = `<div class="rack-device device-pc-style" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-cli" onclick="openTerminal('PuTTY / Terminal', '${devName}')">Terminal</button><button class="dev-btn btn-ip" onclick="openIPModal('${devName}', '192.168.1.101')">IP</button></div><div class="device-info"><div class="led-indicator"></div><span class="device-name" id="name-${devName}">[2U] WORKSTATION (${devName})</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'RS232')">RS232</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'ETH0')">ETH0</div></div></div></div>`;
+        html = `<div class="rack-device device-pc-style" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-cli" onclick="openTerminal('PC Terminal', '${devName}')">Terminal</button><button class="dev-btn btn-ip" onclick="openManualIPModal('${devName}')">IP</button></div><div class="device-info"><div class="led-indicator"></div><span class="device-name" id="name-${devName}">[2U] WORKSTATION (${devName})</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'RS232')">RS232</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'ETH0')">ETH0</div></div></div></div>`;
       }
 
       rack.insertAdjacentHTML('beforeend', html);
@@ -824,7 +842,6 @@
       drawAllCables();
     }
 
-    // Function to dynamically add ports to routers and switches
     function addPortToDevice(deviceId, type) {
       const portsRow = document.getElementById(`ports-${deviceId}`);
       if (!portsRow) return;
@@ -832,13 +849,7 @@
       const devNameSpan = document.querySelector(`#${deviceId} .device-name`)?.innerText || deviceId;
       const shortName = devNameSpan.includes('CISCO') && devNameSpan.includes('ROUTER') ? 'Router1' : (devNameSpan.includes('CATALYST') ? 'Switch1' : deviceId);
 
-      let newPortName = '';
-      if (type === 'Router') {
-        newPortName = `g0/0/${portCount}`;
-      } else {
-        newPortName = `Fa0/${portCount}`;
-      }
-
+      let newPortName = type === 'Router' ? `g0/0/${portCount}` : `Fa0/${portCount}`;
       const newPortElem = document.createElement('div');
       newPortElem.className = 'port-box';
       newPortElem.innerText = newPortName;
@@ -853,7 +864,6 @@
         '🗑 מחיקת רכיב מהארון',
         `<p>האם ברצונך למחוק רכיב זה יחד עם כל הכבלים המחוברים אליו?</p>`,
         () => {
-          // Remove connected cables associated with this device element
           connections = connections.filter(c => {
             const isRelated = c.elem1.closest('.rack-device')?.id === id || c.elem2.closest('.rack-device')?.id === id;
             if (isRelated) {
@@ -868,28 +878,57 @@
       );
     }
 
-    /* PuTTY Terminal & Console Engine */
-    function openTerminal(type, deviceName) {
+    /* PuTTY חיבור סיאלי אמיתי עם בחירת COM */
+    function promptPuttyConnection(deviceName) {
+      showCustomModal(
+        'banner-info',
+        '💻 התחברות ל-PuTTY (Serial Session)',
+        `
+          <p>הגדר את חיבור ה-Serial עבור <b>${deviceName}</b> (הכנס פורט סיריאלי לדוגמה: <b>COM3</b>):</p>
+          <div style="margin-top:12px;">
+            <label>Serial Line:</label><br>
+            <input type="text" id="puttyComInput" value="COM3" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:6px; border-radius:4px; margin-top:4px; font-family:monospace;">
+          </div>
+          <div style="margin-top:8px;">
+            <label>Speed (Baud):</label><br>
+            <input type="text" value="9600" disabled style="width:100%; background:#0d1117; border:1px solid #30363d; color:#8b949e; padding:6px; border-radius:4px; margin-top:4px;">
+          </div>
+        `,
+        () => {
+          const comVal = document.getElementById('puttyComInput')?.value.trim() || 'COM3';
+          openRealPuTTYTerminal(comVal, deviceName);
+        }
+      );
+    }
+
+    function openRealPuTTYTerminal(comPort, deviceName) {
       currentDevice = deviceName;
-      document.getElementById('terminalTitle').innerText = `PuTTY (${type}) - Connected to ${deviceName}`;
+      document.getElementById('terminalTitle').innerText = `PuTTY (${comPort}) - Connected to ${deviceName}`;
       const screen = document.getElementById('terminalScreen');
 
+      // בדיקה אם חבר כבל קונסול פיזי אל פורט הקונסול או ה-RS232
       const hasConsoleConn = connections.some(c => 
         (c.cableType === 'Rollover Console' || c.color === '#c084fc') && 
         ((c.dev1 === deviceName && c.port1Name === 'Console') || (c.dev2 === deviceName && c.port2Name === 'Console') ||
          (c.dev1 === deviceName && c.port1Name === 'RS232') || (c.dev2 === deviceName && c.port2Name === 'RS232'))
       );
 
-      if (type.includes('Windows') || deviceName.includes('PC')) {
-        cliMode = 'cmd';
-        screen.innerHTML = `Microsoft Windows [Version 10.0.19045]\n(c) Microsoft Corporation. All rights reserved.\n\n`;
-      } else if (!hasConsoleConn && !deviceName.includes('PC')) {
-        screen.innerHTML = `=== PuTTY X.XX - Serial Connection on COM3 ===\n\n[Error]: Port opened successfully, but no active Console (Rollover) cable is connected from PC to ${deviceName}!\nאנא חבר כבל קונסול פיזי מ-RS232 ב-PC1 אל פורט ה-Console ברכיב.\n\n`;
+      if (!hasConsoleConn) {
+        screen.innerHTML = `=== PuTTY - Serial Connection on ${comPort} (9600 baud) ===\n\n[FATAL ERROR]: Unable to open connection to ${comPort}!\n-> לא נמצא כבל קונסול פיזי (Rollover) המחובר בין מחשב PC לבין פורט ה-Console ברכיב ${deviceName}!\nאנא חבר כבל קונסול בארון התקשורת ונסה שוב.\n\n`;
         cliMode = 'locked';
       } else {
         cliMode = deviceStates[deviceName]?.mode || 'user';
-        screen.innerHTML = `=== PuTTY - Serial Connection (9600 baud, 8 data bits, no parity) ===\n\nCisco IOS Software, ISR Software (X86_64_LINUX_IOSD)\nSystem Bootstrap, Version 15.4(3)M3\n\n`;
+        screen.innerHTML = `=== PuTTY - Serial Connection on ${comPort} (9600 baud, 8-N-1) ===\n\nCisco IOS Software, ISR Software (X86_64_LINUX_IOSD)\nSystem Bootstrap, Version 15.4(3)M3\nConnected successfully via ${comPort}!\n\n`;
       }
+      renderCliPrompt();
+    }
+
+    function openTerminal(type, deviceName) {
+      currentDevice = deviceName;
+      document.getElementById('terminalTitle').innerText = `Terminal - ${deviceName}`;
+      const screen = document.getElementById('terminalScreen');
+      cliMode = 'cmd';
+      screen.innerHTML = `Microsoft Windows [Version 10.0.19045]\n(c) Microsoft Corporation. All rights reserved.\n\n`;
       renderCliPrompt();
     }
 
@@ -966,24 +1005,130 @@
       if (lower === 'enable' || lower === 'en') cliMode = 'priv';
       else if (lower === 'configure terminal' || lower === 'conf t') cliMode = 'config';
       else if (lower.startsWith('int')) cliMode = 'if';
-      else if (lower.startsWith('hostname ')) { if (dev) dev.hostnameChanged = true; }
-      else if (lower === 'write memory' || lower === 'wr') { if (dev) dev.saved = true; appendTerminalOutput(`[OK]\n Building configuration...\n[OK]\n`); }
-      else if (lower === 'cls' || lower === 'clear') document.getElementById('terminalScreen').innerHTML = '';
-      else appendTerminalOutput(`\n% Command accepted and processed\n`);
+      else if (lower.startsWith('hostname ')) {
+        const newHn = cmd.split(' ')[1];
+        if (dev) { dev.name = newHn; dev.hostnameChanged = true; }
+      }
+      else if (lower.startsWith('ip address ')) {
+        const parts = cmd.split(' ');
+        if (dev && parts.length >= 3) {
+          dev.ips['activeInterface'] = { ip: parts[2], mask: parts[3] || '255.255.255.0' };
+        }
+      }
+      else if (lower.includes('vlan')) {
+        const vNum = parseInt(lower.replace(/[^0-9]/g, '')) || 10;
+        if (dev && !dev.vlans.includes(vNum)) dev.vlans.push(vNum);
+      }
+      else if (lower.includes('trunk')) {
+        if (dev && !dev.trunks.includes('trunk')) dev.trunks.push('Trunk Active');
+      }
+      else if (lower === 'write memory' || lower === 'wr') {
+        if (dev) dev.saved = true;
+        appendTerminalOutput(`[OK]\n Building configuration...\n[OK]\n`);
+      }
+      else if (lower === 'cls' || lower === 'clear') {
+        document.getElementById('terminalScreen').innerHTML = '';
+      }
+      else {
+        appendTerminalOutput(`\n% Command accepted and processed successfully\n`);
+      }
 
       if (dev) dev.mode = cliMode;
+    }
+
+    /* הגדרת IP ידנית על ידי התלמיד */
+    function openManualIPModal(deviceName) {
+      const cur = deviceStates[deviceName] || {};
+      showCustomModal(
+        'banner-info',
+        `🌐 הגדרת כתובות ידנית עבור ${deviceName}`,
+        `
+          <p>הכנס את כתובות ה-IP שבחרת עבור רכיב זה:</p>
+          <div style="margin-top:10px;">
+            <label>IP Address:</label><br>
+            <input type="text" id="manualIpVal" value="${cur.ip || cur.ips?.['activeInterface']?.ip || ''}" placeholder="192.168.1.X" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:6px; border-radius:4px; margin-top:4px; font-family:monospace;">
+          </div>
+          <div style="margin-top:8px;">
+            <label>Subnet Mask:</label><br>
+            <input type="text" id="manualMaskVal" value="${cur.mask || cur.ips?.['activeInterface']?.mask || '255.255.255.0'}" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:6px; border-radius:4px; margin-top:4px; font-family:monospace;">
+          </div>
+          <div style="margin-top:8px;">
+            <label>Default Gateway:</label><br>
+            <input type="text" id="manualGwVal" value="${cur.gw || ''}" placeholder="192.168.1.1" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:6px; border-radius:4px; margin-top:4px; font-family:monospace;">
+          </div>
+        `,
+        () => {
+          const ip = document.getElementById('manualIpVal')?.value.trim();
+          const mask = document.getElementById('manualMaskVal')?.value.trim();
+          const gw = document.getElementById('manualGwVal')?.value.trim();
+          if (deviceStates[deviceName]) {
+            deviceStates[deviceName].ip = ip;
+            deviceStates[deviceName].mask = mask;
+            deviceStates[deviceName].gw = gw;
+          }
+          alert(`הגדרות ה-IP עבור ${deviceName} נשמרו בהצלחה!`);
+        }
+      );
+    }
+
+    /* כפתור חדש: סיימתי לחווט, הצג טופולוגיה מלאה ודוחות */
+    function openFullTopologyReport() {
+      let connRows = '';
+      if (connections.length === 0) {
+        connRows = '<tr><td colspan="4" style="text-align:center; color:#8b949e;">אין עדיין כבלים מחוברים בארון.</td></tr>';
+      } else {
+        connections.forEach((c, idx) => {
+          connRows += `<tr><td>${idx+1}</td><td>${c.dev1} (${c.port1Name})</td><td>${c.dev2} (${c.port2Name})</td><td>${c.cableType}</td></tr>`;
+        });
+      }
+
+      let ipRows = '';
+      Object.keys(deviceStates).forEach(devKey => {
+        const d = deviceStates[devKey];
+        const ipAddr = d.ip || d.ips?.['activeInterface']?.ip || 'לא הוגדר';
+        const maskAddr = d.mask || d.ips?.['activeInterface']?.mask || '-';
+        ipRows += `<tr><td>${devKey} (${d.name})</td><td>${ipAddr}</td><td>${maskAddr}</td><td>VLAN: ${d.vlans?.join(', ') || 1}</td></tr>`;
+      });
+
+      showCustomModal(
+        'banner-success',
+        '🚀 דוח טופולוגיה לוגית ופיזית מלאה',
+        `
+          <p>כל הכבוד! להלן ניתוח מלא של תוצאת החיבורים וההגדרות שהוזנו במעבדה:</p>
+          
+          <h4 style="color:#58a6ff; margin-top:12px;">🔌 טבלת חיווט פיזי (Physical Connections)</h4>
+          <table class="topo-table">
+            <tr><th>#</th><th>צד א' (Device & Port)</th><th>צד ב' (Device & Port)</th><th>סוג כבל</th></tr>
+            ${connRows}
+          </table>
+
+          <h4 style="color:#58a6ff; margin-top:14px;">🌐 טבלת כתובות IP והגדרות ממשק</h4>
+          <table class="topo-table">
+            <tr><th>רכיב</th><th>כתובת IP</th><th>Subnet Mask</th><th>VLAN / Trunks</th></tr>
+            ${ipRows}
+          </table>
+
+          <h4 style="color:#58a6ff; margin-top:14px;">📋 פרוטוקולים ושירותים (MAC, ARP, Port Security, NAT, ACL)</h4>
+          <div class="feedback-box-section" style="font-family:monospace; font-size:11px;">
+            • <b>MAC Table:</b> נלמדו אוטומטית דרך פורטי הסוויץ' הפעילים.<br>
+            • <b>ARP Table:</b> סונכרן בהצלחה עבור כתובות ה-IP שהוגדרו ברשת המקומית.<br>
+            • <b>Port Security:</b> מוגדר במצבי ברירת מחדל (Sticky Learning מוכן להפעלה).<br>
+            • <b>Routing / ACL / NAT:</b> סטטוס ראוטר מקומי פעיל, רשימות גישה וניתוב סטטי מוכנים לבדיקת Ping.
+          </div>
+        `
+      );
     }
 
     /* Integrated Tasks System */
     const labTasks = [
       { id: 1, title: "1. חיבור ראוטר לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל ישר מ-g0/0/0 בראוטר ל-Fa0/1 בסוויץ'", soft: "ללא", check: () => connections.some(c => (c.cableType === 'Straight-Through' || c.color === '#38bdf8') && ((c.dev1.includes('Router') && c.dev2.includes('Switch')) || (c.dev2.includes('Router') && c.dev1.includes('Switch')))) },
       { id: 2, title: "2. חיבור PC1 לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל ישר מ-ETH0 ב-PC1 ל-Fa0/2 בסוויץ'", soft: "ללא", check: () => connections.some(c => (c.cableType === 'Straight-Through' || c.color === '#38bdf8') && ((c.dev1.includes('PC') && c.dev2.includes('Switch')) || (c.dev2.includes('PC') && c.dev1.includes('Switch')))) },
-      { id: 3, title: "3. חיבור Console ב-PuTTY", diff: "Easy", diffClass: "diff-easy", phys: "כבל קונסול מ-RS232 ב-PC1 ל-Console בראוטר", soft: "פתחי PuTTY", check: () => connections.some(c => c.cableType === 'Rollover Console' || c.color === '#c084fc') },
+      { id: 3, title: "3. חיבור Console ב-PuTTY", diff: "Easy", diffClass: "diff-easy", phys: "כבל קונסול מ-RS232 ב-PC1 ל-Console בראוטר", soft: "התחבר עם COM3", check: () => connections.some(c => c.cableType === 'Rollover Console' || c.color === '#c084fc') },
       { id: 4, title: "4. הגדרת Hostname", diff: "Easy", diffClass: "diff-easy", phys: "אין", soft: "conf t -> hostname R1", check: () => deviceStates['Router1']?.hostnameChanged || executedCommands.some(c => c.cmd.startsWith('hostname')) },
-      { id: 5, title: "5. הגדרת IP בראוטר", diff: "Med", diffClass: "diff-med", phys: "אין", soft: "int g0/0/0 -> ip address 192.168.1.1 255.255.255.0", check: () => executedCommands.some(c => c.cmd.includes('ip address') || c.cmd.includes('ip add')) },
+      { id: 5, title: "5. הגדרת IP בראוטר", diff: "Med", diffClass: "diff-med", phys: "אין", soft: "ip address ידני / CLI", check: () => deviceStates['Router1']?.ip !== '' || Object.keys(deviceStates['Router1']?.ips || {}).length > 0 },
       { id: 6, title: "6. הפעלת no shutdown", diff: "Med", diffClass: "diff-med", phys: "אין", soft: "no shutdown בממשק הרשת", check: () => executedCommands.some(c => c.cmd === 'no shutdown' || c.cmd === 'no shut') },
-      { id: 7, title: "7. הגדרת IP ב-PC1", diff: "Med", diffClass: "diff-med", phys: "אין", soft: "לחץ IP ב-PC1 והגדר 192.168.1.100", check: () => deviceStates['PC1']?.ip === '192.168.1.100' },
-      { id: 8, title: "8. בדיקת Ping", diff: "Hard", diffClass: "diff-hard", phys: "אין", soft: "ב-PC CMD הרץ: ping 192.168.1.1", check: () => executedCommands.some(c => c.cmd.startsWith('ping')) },
+      { id: 7, title: "7. הגדרת IP ב-PC1", diff: "Med", diffClass: "diff-med", phys: "אין", soft: "לחץ IP ב-PC1 והגדר ידנית", check: () => deviceStates['PC1']?.ip !== '' },
+      { id: 8, title: "8. בדיקת Ping", diff: "Hard", diffClass: "diff-hard", phys: "אין", soft: "ב-PC CMD הרץ: ping", check: () => executedCommands.some(c => c.cmd.startsWith('ping')) },
       { id: 9, title: "9. שמירת קונפיגורציה", diff: "Hard", diffClass: "diff-hard", phys: "אין", soft: "write memory בראוטר", check: () => deviceStates['Router1']?.saved || executedCommands.some(c => c.cmd === 'write memory' || c.cmd === 'wr') },
       { id: 10, title: "10. סדר וארגון הארון", diff: "Hard", diffClass: "diff-hard", phys: "הוסף רכיב חדש וסדר אותו בארון בגרירה", soft: "בדיקת טופולוגיה", check: () => document.querySelectorAll('.rack-device').length >= 4 }
     ];
@@ -1005,7 +1150,6 @@
           </div>
         `;
       });
-
       container.innerHTML = html;
     }
 
@@ -1017,30 +1161,13 @@
         showCustomModal(
           'banner-success',
           '⭐ משימה בוצעה בהצלחה!',
-          `
-            <p style="color:#3fb950; font-weight:bold;">כל הכבוד! ביצעת את המשימה בצורה מקצועית.</p>
-            <div class="feedback-box-section">
-              <b>ניתוח ביצוע:</b><br>
-              • חיבור פיזי: תקין ומאומת ברמת ה-Rack.<br>
-              • הגדרת תוכנה: הפקודות זוהו ב-CLI בהצלחה.
-            </div>
-            <p style="margin-top:10px; color:#8b949e;">💡 <b>דגש CCNA:</b> שמירה על רצף פקודות נכון מבטיחה יציבות בפתרון תקלות ברשת אמיתית!</p>
-          `
+          `<p style="color:#3fb950; font-weight:bold;">כל הכבוד! ביצעת את המשימה בצורה מקצועית.</p>`
         );
       } else {
         showCustomModal(
           'banner-warning',
           '💡 משימה בתהליך ביצוע',
-          `
-            <p style="color:#d29922; font-weight:bold;">הטופולוגיה או ה-CLI עדיין ממתינים להשלמת השלבים.</p>
-            <div class="feedback-box-section">
-              <b>מה נדרש לבצע?</b><br>
-              • 🔌 <b>שלב פיזי:</b> ${task.phys}<br>
-              • 💻 <b>שלב CLI:</b> ${task.soft}
-            </div>
-            <p style="margin-top:10px;"><b>דוגמת פקודה מומלצת לביצוע:</b></p>
-            <div class="cli-code-snippet">Router(config)# ${task.soft}</div>
-          `
+          `<p style="color:#d29922; font-weight:bold;">הטופולוגיה או הגדרות ה-IP עדיין ממתינים להשלמת השלבים.</p>`
         );
       }
       renderTasksList();
@@ -1052,37 +1179,10 @@
         connListHtml = '<p style="color:#8b949e;">אין חיבורי כבלים פעילים בארון כרגע.</p>';
       } else {
         connections.forEach((c, i) => {
-          connListHtml += `<div style="background:#0d1117; padding:6px 10px; border-radius:4px; margin-bottom:4px; font-family:monospace; direction:ltr;">
-            #${i+1}: [${c.dev1} - ${c.port1Name}] <--> [${c.dev2} - ${c.port2Name}] (${c.cableType || 'Cable'})
-          </div>`;
+          connListHtml += `<div style="background:#0d1117; padding:6px 10px; border-radius:4px; margin-bottom:4px; font-family:monospace; direction:ltr;">#${i+1}: [${c.dev1} - ${c.port1Name}] <--> [${c.dev2} - ${c.port2Name}] (${c.cableType})</div>`;
         });
       }
-
-      showCustomModal(
-        'banner-info',
-        '📊 ניתוח טופולוגיית ארון תקשורת',
-        `
-          <p><b>סה"כ כבלים פעילים ברשת:</b> ${connections.length}</p>
-          <div class="feedback-box-section">
-            ${connListHtml}
-          </div>
-          <p style="margin-top:10px; color:#8b949e;">💡 <b>טיפ ניהול תשתיות:</b> ארגון כבלים בתעלות הצדדיות של ה-Rack מונע חימום יתר של המכשירים!</p>
-        `
-      );
-    }
-
-    function openIPModal(dev, ip) {
-      showCustomModal(
-        'banner-info',
-        `🌐 הגדרות IPv4 עבור ${dev}`,
-        `
-          <div class="feedback-box-section">
-            <p><b>כתובת IP:</b> ${ip}</p>
-            <p><b>Subnet Mask:</b> 255.255.255.0</p>
-            <p><b>Default Gateway:</b> 192.168.1.1</p>
-          </div>
-        `
-      );
+      showCustomModal('banner-info', '📊 ניתוח טופולוגיית ארון תקשורת', `<div class="feedback-box-section">${connListHtml}</div>`);
     }
 
     let currentConfirmAction = null;
@@ -1106,12 +1206,7 @@
     }
 
     function resetSimulator() {
-      showCustomModal(
-        'banner-warning',
-        '🔄 איפוס מעבדה',
-        '<p>האם ברצונך לאפס את כל החיבורים, המשימות והגדרות המכשירים בארון?</p>',
-        () => location.reload()
-      );
+      showCustomModal('banner-warning', '🔄 איפוס מעבדה', '<p>האם ברצונך לאפס את כל החיבורים וההגדרות בארון?</p>', () => location.reload());
     }
 
     function closeTerminal() { document.getElementById('terminalScreen').innerHTML = ''; }
