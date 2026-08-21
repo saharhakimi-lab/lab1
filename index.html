@@ -72,7 +72,6 @@
     .btn-topo { background-color: #374151; }
     .btn-done-topo { background: linear-gradient(135deg, #238636, #2ea043) !important; border: 1px solid #3fb950 !important; box-shadow: 0 0 10px rgba(46,160,67,0.4); }
 
-    /* Spinning Avatar in Header */
     .header-title-container { display: flex; align-items: center; gap: 10px; }
 
     .crazy-avatar-img {
@@ -92,108 +91,47 @@
       100% { transform: rotate(360deg) scale(1); box-shadow: 0 0 8px #00f0ff; }
     }
 
-    /* Main Dashboard Layout - 3 Columns */
+    /* Main Dashboard Layout */
     .app-body {
       display: flex;
       flex: 1;
-      height: calc(100vh - 95px);
+      height: calc(100vh - 100px);
       padding: 10px;
-      gap: 10px;
+      gap: 12px;
       position: relative;
     }
 
-    /* Column 1: Tasks Panel (Right Side) */
-    .tasks-panel {
-      width: 320px;
-      background-color: #161b22;
-      border-radius: 8px;
-      border: 1px solid #30363d;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      overflow-y: auto;
-      z-index: 2;
-    }
-
-    .panel-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: #f0f6fc;
-      border-bottom: 1px solid #30363d;
-      padding-bottom: 6px;
-    }
-
-    .task-card {
-      background: #0d1117;
-      border: 1px solid #30363d;
-      border-radius: 6px;
-      padding: 8px;
-    }
-
-    .badge-diff {
-      font-size: 9px;
-      padding: 2px 6px;
-      border-radius: 10px;
-      font-weight: bold;
-    }
-    .diff-easy { background: #1f6feb; color: white; }
-    .diff-med { background: #d97706; color: white; }
-    .diff-hard { background: #da3633; color: white; }
-
-    .btn-check-task {
-      background: #238636;
-      color: white;
-      border: none;
-      padding: 5px 8px;
-      border-radius: 4px;
-      font-size: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 6px;
-      transition: background 0.2s;
-    }
-
-    .btn-check-task:hover { background: #2ea043; }
-
-    /* Column 2: REALISTIC RACK CABINET */
+    /* Column 1: TWO-COLUMN RACK CABINET FRAME */
     .rack-wrapper {
-      flex: 1;
-      min-width: 420px;
+      flex: 2.2;
       background: #05070a;
       border: 12px solid #161a22;
       border-radius: 12px;
-      padding: 10px 38px 25px 38px;
+      padding: 12px;
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      gap: 12px;
       overflow-y: auto;
       box-shadow: inset 0 0 50px rgba(0,0,0,0.95), 0 10px 30px rgba(0,0,0,0.8);
       position: relative;
       z-index: 2;
     }
 
-    /* Side Mounting Rails */
-    .rack-wrapper::before, .rack-wrapper::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0; width: 24px;
-      background: repeating-linear-gradient(180deg, #1f242c 0px, #1f242c 14px, #0d1117 14px, #0d1117 22px);
-      border: 1px solid #30363d;
-      z-index: 1;
+    /* INDEPENDENT DRAGGABLE COLUMNS */
+    .rack-column {
+      flex: 1;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 6px;
+      border: 1px dashed rgba(255,255,255,0.08);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.01);
     }
-    .rack-wrapper::before { left: 6px; border-right: 2px solid #484f58; }
-    .rack-wrapper::after { right: 6px; border-left: 2px solid #484f58; }
 
-    /* U Number Labels */
-    .u-rail-labels {
-      position: absolute;
-      top: 10px; left: 8px; bottom: 25px;
-      display: flex; flex-direction: column;
-      justify-content: space-between;
-      z-index: 3; pointer-events: none;
-      font-family: monospace; font-size: 9px; color: #8b949e; font-weight: bold;
+    .rack-column.drag-over {
+      background: rgba(56, 189, 248, 0.05);
+      border-color: #38bdf8;
     }
 
     .rack-device {
@@ -208,10 +146,11 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 52px;
+      min-height: 75px;
+      transition: transform 0.1s ease;
     }
 
-    .rack-device.dragging { opacity: 0.6; cursor: grabbing; border-color: #58a6ff; }
+    .rack-device.dragging { opacity: 0.3; cursor: grabbing; border-color: #58a6ff; }
 
     .device-l3 { border-top: 3px solid #1f6feb; }
     .device-switch24 { border-top: 3px solid #2ea043; }
@@ -220,6 +159,7 @@
     .device-nvr { border-top: 3px solid #8957e5; }
     .device-patch { border-top: 3px solid #38bdf8; }
     .device-pdu { border-top: 3px solid #da3633; background: #12151a !important; }
+    .device-pc-style { border-top: 3px solid #e11d48; }
 
     .device-title-bar {
       display: flex;
@@ -257,7 +197,6 @@
       animation: blinkLed 1.8s infinite;
     }
     .led-indicator.amber { background-color: var(--led-amber); box-shadow: 0 0 5px var(--led-amber); }
-    .led-indicator.off { background-color: #30363d; box-shadow: none; animation: none; }
 
     @keyframes blinkLed { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
@@ -270,7 +209,6 @@
 
     .ports-row { display: flex; gap: 4px; flex-wrap: wrap; direction: ltr; align-items: center; }
 
-    /* RJ45 & Power Port Style */
     .port-box {
       width: 28px; height: 22px;
       border: 1px solid #484f58;
@@ -291,37 +229,46 @@
       content: ''; position: absolute; bottom: 1px; right: 2px; width: 3px; height: 3px; border-radius: 50%; background: #3fb950; box-shadow: 0 0 4px #3fb950;
     }
 
-    /* Column 3: Terminal Panel (Left Side) */
-    .terminal-container {
+    /* Column 2: Side Panel (Terminal Upper + Tasks Lower) */
+    .side-control-column {
       flex: 1;
-      min-width: 320px;
+      min-width: 330px;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    .terminal-container {
+      height: 200px;
       background-color: #0f172a;
       border-radius: 8px;
       border: 1px solid #1e293b;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      z-index: 2;
+      flex-shrink: 0;
     }
 
     .terminal-header {
       background-color: #1e293b;
       color: #38bdf8;
-      padding: 6px 10px;
+      padding: 4px 8px;
       border-bottom: 1px solid #334155;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-weight: bold;
-      font-size: 11px;
+      font-size: 10px;
     }
 
     .terminal-screen {
       flex: 1;
-      padding: 10px;
+      padding: 8px;
       font-family: 'Consolas', 'Courier New', monospace;
       color: #4ade80;
-      font-size: 12px;
+      font-size: 11px;
       overflow-y: auto;
       white-space: pre-wrap;
       direction: ltr;
@@ -330,12 +277,65 @@
     }
 
     .cli-line { display: flex; align-items: center; margin-top: 2px; direction: ltr; }
-    .cli-prompt { color: #4ade80; font-weight: bold; white-space: pre; }
+    .cli-prompt { color: #4ade80; font-weight: bold; white-space: pre; font-size: 11px; }
     .cli-input {
       background: transparent; border: none; outline: none;
       color: #4ade80; font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 12px; flex: 1; margin-left: 2px; direction: ltr;
+      font-size: 11px; flex: 1; margin-left: 2px; direction: ltr;
     }
+
+    .tasks-panel {
+      flex: 1;
+      background-color: #161b22;
+      border-radius: 8px;
+      border: 1px solid #30363d;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+    }
+
+    .panel-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: #f0f6fc;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 6px;
+    }
+
+    .task-card {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 8px;
+    }
+
+    .badge-diff {
+      font-size: 8px;
+      padding: 1px 5px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+    .diff-easy { background: #1f6feb; color: white; }
+    .diff-med { background: #d97706; color: white; }
+    .diff-hard { background: #da3633; color: white; }
+
+    .btn-check-task {
+      background: #238636;
+      color: white;
+      border: none;
+      padding: 4px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-check-task:hover { background: #2ea043; }
 
     /* Bottom Cable Controls Toolbar */
     .bottom-toolbar {
@@ -357,20 +357,30 @@
     .cable-pill {
       background: #0d1117;
       border: 1px solid #30363d;
-      padding: 5px 10px;
+      padding: 4px 8px;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11px;
+      gap: 5px;
+      font-size: 10.5px;
       font-weight: 600;
       transition: all 0.2s;
     }
 
     .cable-pill:hover { border-color: #8b949e; }
     .cable-pill.active { border-color: #58a6ff; background: #1f242c; box-shadow: 0 0 8px rgba(88, 166, 255, 0.3); }
-    .cable-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .cable-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    .slack-control {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0d1117;
+      padding: 3px 8px;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+    }
 
     #cableSvgContainer {
       position: absolute;
@@ -402,7 +412,7 @@
     }
 
     .bot-avatar-img {
-      width: 28px; height: 28px; border-radius: 50%;
+      width: 26px; height: 26px; border-radius: 50%;
       object-fit: cover; border: 1.5px solid #00f0ff;
     }
 
@@ -415,12 +425,6 @@
       align-items: center;
       justify-content: center;
       z-index: 10000;
-      animation: fadeInModal 0.25s ease-out forwards;
-    }
-
-    @keyframes fadeInModal {
-      from { opacity: 0; transform: scale(0.96); }
-      to { opacity: 1; transform: scale(1); }
     }
 
     .custom-modal-card {
@@ -438,7 +442,7 @@
     }
 
     .modal-banner-header {
-      padding: 16px 20px;
+      padding: 14px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -451,7 +455,7 @@
     .banner-info { background: linear-gradient(135deg, #0c2d54, #061930); border-color: #38bdf8; }
 
     .modal-banner-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: bold;
       color: #ffffff;
       display: flex;
@@ -463,21 +467,17 @@
       background: rgba(255,255,255,0.1);
       border: none;
       color: white;
-      width: 26px;
-      height: 26px;
+      width: 24px; height: 24px;
       border-radius: 50%;
       cursor: pointer;
       font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
-    .modal-close-btn:hover { background: rgba(255,255,255,0.25); }
 
     .modal-body-content {
-      padding: 20px;
-      font-size: 13px;
-      line-height: 1.6;
+      padding: 18px;
+      font-size: 12.5px;
+      line-height: 1.5;
       overflow-y: auto;
       flex: 1;
     }
@@ -486,12 +486,12 @@
       background: #0d1117;
       border: 1px solid #21262d;
       border-radius: 8px;
-      padding: 12px;
-      margin-top: 10px;
+      padding: 10px;
+      margin-top: 8px;
     }
 
     .modal-footer-bar {
-      padding: 12px 20px;
+      padding: 10px 18px;
       background: #0d1117;
       border-top: 1px solid #21262d;
       display: flex;
@@ -503,13 +503,12 @@
       background: #238636;
       color: white;
       border: none;
-      padding: 7px 18px;
+      padding: 6px 16px;
       border-radius: 6px;
       font-weight: bold;
       font-size: 12px;
       cursor: pointer;
     }
-    .btn-modal-action:hover { background: #2ea043; }
 
     .topo-table {
       width: 100%;
@@ -521,7 +520,7 @@
     }
     .topo-table th, .topo-table td {
       border: 1px solid #30363d;
-      padding: 6px 8px;
+      padding: 5px 7px;
       text-align: left;
     }
     .topo-table th { background: #161b22; color: #58a6ff; }
@@ -531,7 +530,7 @@
 
   <header>
     <div class="header-title-container">
-      <img src="https://lh3.googleusercontent.com/d/1t9QaPCKLvtAhWncetA83ALY8EIvpnFte" class="crazy-avatar-img" alt="Crazy Avatar" onclick="alert('🤖: מה קורה אחי? הגדר כתובות IP לבד וחבר קונסול אמיתי ב-PuTTY!')">
+      <img src="https://lh3.googleusercontent.com/d/1t9QaPCKLvtAhWncetA83ALY8EIvpnFte" class="crazy-avatar-img" alt="Crazy Avatar" onclick="alert('🤖: הטורים בארון עכשיו עצמאיים לחלוטין! גמה רכיבים שבא לך בכל צד!')">
       <div style="font-weight: bold; font-size: 13px;">מעבדת התקשוב של סהר - בונים, מחליפים ומחווטים בזמן אמת</div>
     </div>
 
@@ -548,219 +547,227 @@
   <div class="app-body" id="appBodyContainer">
     <svg id="cableSvgContainer"></svg>
 
-    <!-- Column 1: Tasks Side Panel -->
-    <div class="tasks-panel">
-      <div class="panel-title">🏆 10 משימות מעבדה בארון התקשורת</div>
-      <div id="tasksListContainer"></div>
-    </div>
-
-    <!-- Column 2: REALISTIC RACK CABINET -->
+    <!-- Column 1 (Left/Center Main): RACK CABINET WITH 2 INDEPENDENT COLUMNS -->
     <div class="rack-wrapper" id="rackContainer">
-      <div class="u-rail-labels">
-        <span>8U</span><span>7U</span><span>6U</span><span>5U</span><span>4U</span><span>3U</span><span>2U</span><span>1U</span>
-      </div>
       
-      <!-- 1U: L3 SWITCH / ROUTER -->
-      <div class="rack-device device-l3" id="device-router" draggable="true">
-        <div class="device-title-bar">
-          <div class="device-buttons">
-            <button class="dev-btn btn-delete" onclick="deleteDevice('device-router')">מחק</button>
-            <button class="dev-btn btn-addport" onclick="addPortToDevice('device-router', 'Router')">+ פורט</button>
-            <button class="dev-btn btn-cli" onclick="promptPuttyConnection('Router1')">PuTTY CLI</button>
-            <button class="dev-btn btn-ip" onclick="openManualIPModal('Router1')">IP</button>
-          </div>
-          <div class="device-info">
-            <div class="led-matrix">
-              <div class="led-indicator"></div>
-              <div class="led-indicator amber"></div>
-              <div class="led-indicator"></div>
+      <!-- RIGHT COLUMN (TUR 1) -->
+      <div class="rack-column" id="rackColRight">
+        <!-- 1: L3 SWITCH / ROUTER -->
+        <div class="rack-device device-l3" id="device-router" draggable="true">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-delete" onclick="deleteDevice('device-router')">מחק</button>
+              <button class="dev-btn btn-addport" onclick="addPortToDevice('device-router', 'Router')">+ פורט</button>
+              <button class="dev-btn btn-cli" onclick="promptPuttyConnection('Router1')">PuTTY</button>
+              <button class="dev-btn btn-ip" onclick="openManualIPModal('Router1')">IP</button>
             </div>
-            <span class="device-badge" style="background:#1f6feb;">1</span>
-            <span class="device-name" id="name-Router1">L3 SWITCH / ROUTER</span>
-          </div>
-        </div>
-        <div class="ports-container">
-          <div class="ports-row" id="ports-device-router">
-            <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'Router1', 'PWR')">PWR</div>
-            <div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, 'Router1', 'Console')">Con</div>
-            <div class="port-box" style="border-color:#f1c40f; color:#f1c40f;" onclick="handlePortClick(this, 'Router1', 'WAN')">WAN</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Router1', 'g0/0/0')">g0/0/0</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Router1', 'g0/0/1')">g0/0/1</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Router1', 'g0/0/2')">g0/0/2</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2U: MANAGED 24-PORT SWITCH -->
-      <div class="rack-device device-switch24" id="device-switch" draggable="true">
-        <div class="device-title-bar">
-          <div class="device-buttons">
-            <button class="dev-btn btn-delete" onclick="deleteDevice('device-switch')">מחק</button>
-            <button class="dev-btn btn-addport" onclick="addPortToDevice('device-switch', 'Switch')">+ פורט</button>
-            <button class="dev-btn btn-cli" onclick="promptPuttyConnection('Switch1')">PuTTY CLI</button>
-            <button class="dev-btn btn-ip" onclick="openManualIPModal('Switch1')">IP</button>
-          </div>
-          <div class="device-info">
-            <div class="led-matrix">
-              <div class="led-indicator"></div>
-              <div class="led-indicator"></div>
+            <div class="device-info">
+              <div class="led-matrix">
+                <div class="led-indicator"></div>
+                <div class="led-indicator amber"></div>
+              </div>
+              <span class="device-badge" style="background:#1f6feb;">1</span>
+              <span class="device-name" id="name-Router1">L3 SWITCH / ROUTER</span>
             </div>
-            <span class="device-badge" style="background:#2ea043;">2</span>
-            <span class="device-name" id="name-Switch1">MANAGED 24-PORT SWITCH</span>
+          </div>
+          <div class="ports-container">
+            <div class="ports-row" id="ports-device-router">
+              <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'Router1', 'PWR')">PWR</div>
+              <div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, 'Router1', 'Console')">Con</div>
+              <div class="port-box" style="border-color:#f1c40f; color:#f1c40f;" onclick="handlePortClick(this, 'Router1', 'WAN')">WAN</div>
+              <div class="port-box" onclick="handlePortClick(this, 'Router1', 'g0/0/0')">g0/0/0</div>
+              <div class="port-box" onclick="handlePortClick(this, 'Router1', 'g0/0/1')">g0/0/1</div>
+            </div>
           </div>
         </div>
-        <div class="ports-container">
-          <div class="ports-row" id="ports-device-switch">
-            <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'Switch1', 'PWR')">PWR</div>
-            <div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, 'Switch1', 'Console')">Con</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/1')">F0/1</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/2')">F0/2</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/3')">F0/3</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/4')">F0/4</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/5')">F0/5</div>
-            <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/6')">F0/6</div>
+
+        <!-- 2: MANAGED 24-PORT SWITCH -->
+        <div class="rack-device device-switch24" id="device-switch" draggable="true">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-delete" onclick="deleteDevice('device-switch')">מחק</button>
+              <button class="dev-btn btn-addport" onclick="addPortToDevice('device-switch', 'Switch')">+ פורט</button>
+              <button class="dev-btn btn-cli" onclick="promptPuttyConnection('Switch1')">PuTTY</button>
+              <button class="dev-btn btn-ip" onclick="openManualIPModal('Switch1')">IP</button>
+            </div>
+            <div class="device-info">
+              <div class="led-matrix"><div class="led-indicator"></div></div>
+              <span class="device-badge" style="background:#2ea043;">2</span>
+              <span class="device-name" id="name-Switch1">MANAGED 24-PORT SWITCH</span>
+            </div>
+          </div>
+          <div class="ports-container">
+            <div class="ports-row" id="ports-device-switch">
+              <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'Switch1', 'PWR')">PWR</div>
+              <div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, 'Switch1', 'Console')">Con</div>
+              <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/1')">F0/1</div>
+              <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/2')">F0/2</div>
+              <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/3')">F0/3</div>
+              <div class="port-box" onclick="handlePortClick(this, 'Switch1', 'Fa0/4')">F0/4</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3: PoE SWITCH -->
+        <div class="rack-device device-poe" id="device-poe" draggable="true">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-delete" onclick="deleteDevice('device-poe')">מחק</button>
+              <button class="dev-btn btn-addport" onclick="addPortToDevice('device-poe', 'PoE')">+ פורט</button>
+              <button class="dev-btn btn-cli" onclick="promptPuttyConnection('PoE-Switch')">PuTTY</button>
+            </div>
+            <div class="device-info">
+              <div class="led-matrix"><div class="led-indicator amber"></div></div>
+              <span class="device-badge" style="background:#d97706;">3</span>
+              <span class="device-name">PoE SWITCH</span>
+            </div>
+          </div>
+          <div class="ports-container">
+            <div class="ports-row" id="ports-device-poe">
+              <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'PoE-Switch', 'PWR')">PWR</div>
+              <div class="port-box" onclick="handlePortClick(this, 'PoE-Switch', 'Uplink')">Up</div>
+              <div class="port-box" onclick="handlePortClick(this, 'PoE-Switch', 'PoE-1')">P1</div>
+              <div class="port-box" onclick="handlePortClick(this, 'PoE-Switch', 'PoE-2')">P2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4: FIREWALL APPLIANCE -->
+        <div class="rack-device device-firewall" id="device-fw" draggable="true">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-delete" onclick="deleteDevice('device-fw')">מחק</button>
+              <button class="dev-btn btn-addport" onclick="addPortToDevice('device-fw', 'Firewall')">+ פורט</button>
+              <button class="dev-btn btn-cli" onclick="promptPuttyConnection('ASA-Firewall')">PuTTY</button>
+            </div>
+            <div class="device-info">
+              <div class="led-matrix"><div class="led-indicator"></div></div>
+              <span class="device-badge" style="background:#0969da;">4</span>
+              <span class="device-name">FIREWALL ASA</span>
+            </div>
+          </div>
+          <div class="ports-container">
+            <div class="ports-row" id="ports-device-fw">
+              <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'ASA-Firewall', 'PWR')">PWR</div>
+              <div class="port-box" style="border-color:#38bdf8;" onclick="handlePortClick(this, 'ASA-Firewall', 'Mgmt')">Mgmt</div>
+              <div class="port-box" onclick="handlePortClick(this, 'ASA-Firewall', 'Eth0/0')">E0/0</div>
+              <div class="port-box" onclick="handlePortClick(this, 'ASA-Firewall', 'Eth0/1')">E0/1</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 3U: PoE SWITCH -->
-      <div class="rack-device device-poe" id="device-poe" draggable="true">
-        <div class="device-title-bar">
-          <div class="device-buttons">
-            <button class="dev-btn btn-delete" onclick="deleteDevice('device-poe')">מחק</button>
-            <button class="dev-btn btn-cli" onclick="promptPuttyConnection('PoE-Switch')">PuTTY CLI</button>
+      <!-- LEFT COLUMN (TUR 2) -->
+      <div class="rack-column" id="rackColLeft">
+        <!-- 5: NVR -->
+        <div class="rack-device device-nvr" id="device-nvr" draggable="true">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-delete" onclick="deleteDevice('device-nvr')">מחק</button>
+              <button class="dev-btn btn-addport" onclick="addPortToDevice('device-nvr', 'NVR')">+ פורט</button>
+            </div>
+            <div class="device-info">
+              <div class="led-matrix"><div class="led-indicator amber"></div></div>
+              <span class="device-badge" style="background:#8957e5;">5</span>
+              <span class="device-name">NETWORK VIDEO RECORDER (NVR)</span>
+            </div>
           </div>
-          <div class="device-info">
-            <div class="led-matrix"><div class="led-indicator amber"></div><div class="led-indicator"></div></div>
-            <span class="device-badge" style="background:#d97706;">3</span>
-            <span class="device-name">PoE SWITCH (POWER OVER ETHERNET)</span>
+          <div class="ports-container">
+            <div class="ports-row" id="ports-device-nvr">
+              <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'NVR', 'PWR')">PWR</div>
+              <div class="port-box" onclick="handlePortClick(this, 'NVR', 'LAN')">LAN</div>
+              <div class="port-box" onclick="handlePortClick(this, 'NVR', 'CAM1')">C1</div>
+            </div>
           </div>
         </div>
-        <div class="ports-container">
-          <div class="ports-row" id="ports-device-poe">
-            <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'PoE-Switch', 'PWR')">PWR</div>
-            <div class="port-box" onclick="handlePortClick(this, 'PoE-Switch', 'Uplink')">Up</div>
-            <div class="port-box" onclick="handlePortClick(this, 'PoE-Switch', 'PoE-1')">P1</div>
-            <div class="port-box" onclick="handlePortClick(this, 'PoE-Switch', 'PoE-2')">P2</div>
-            <div class="port-box" onclick="handlePortClick(this, 'PoE-Switch', 'PoE-3')">P3</div>
-            <div class="port-box" onclick="handlePortClick(this, 'PoE-Switch', 'PoE-4')">P4</div>
-          </div>
-        </div>
-      </div>
 
-      <!-- 4U: FIREWALL / SECURITY APPLIANCE -->
-      <div class="rack-device device-firewall" id="device-fw" draggable="true">
-        <div class="device-title-bar">
-          <div class="device-buttons">
-            <button class="dev-btn btn-delete" onclick="deleteDevice('device-fw')">מחק</button>
-            <button class="dev-btn btn-cli" onclick="promptPuttyConnection('ASA-Firewall')">PuTTY CLI</button>
+        <!-- 6: PATCH PANEL -->
+        <div class="rack-device device-patch" id="device-patch" draggable="true">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-addport" onclick="addPortToDevice('device-patch', 'PatchPanel')">+ פורט</button>
+            </div>
+            <div class="device-info">
+              <span class="device-badge" style="background:#38bdf8;">6</span>
+              <span class="device-name">PATCH PANEL CAT6</span>
+            </div>
           </div>
-          <div class="device-info">
-            <div class="led-matrix"><div class="led-indicator"></div></div>
-            <span class="device-badge" style="background:#0969da;">4</span>
-            <span class="device-name">FIREWALL / SECURITY APPLIANCE</span>
+          <div class="ports-container">
+            <div class="ports-row" id="ports-device-patch">
+              <div class="port-box" onclick="handlePortClick(this, 'PatchPanel', 'Port1')">1</div>
+              <div class="port-box" onclick="handlePortClick(this, 'PatchPanel', 'Port2')">2</div>
+              <div class="port-box" onclick="handlePortClick(this, 'PatchPanel', 'Port3')">3</div>
+              <div class="port-box" onclick="handlePortClick(this, 'PatchPanel', 'Port4')">4</div>
+            </div>
           </div>
         </div>
-        <div class="ports-container">
-          <div class="ports-row" id="ports-device-fw">
-            <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'ASA-Firewall', 'PWR')">PWR</div>
-            <div class="port-box" style="border-color:#38bdf8;" onclick="handlePortClick(this, 'ASA-Firewall', 'Mgmt')">Mgmt</div>
-            <div class="port-box" onclick="handlePortClick(this, 'ASA-Firewall', 'Eth0/0')">E0/0</div>
-            <div class="port-box" onclick="handlePortClick(this, 'ASA-Firewall', 'Eth0/1')">E0/1</div>
-          </div>
-        </div>
-      </div>
 
-      <!-- 5U: NETWORK VIDEO RECORDER (NVR) -->
-      <div class="rack-device device-nvr" id="device-nvr" draggable="true">
-        <div class="device-title-bar">
-          <div class="device-buttons">
-            <button class="dev-btn btn-delete" onclick="deleteDevice('device-nvr')">מחק</button>
+        <!-- 7: PDU -->
+        <div class="rack-device device-pdu" id="device-pdu" draggable="true">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-addport" onclick="addPortToDevice('device-pdu', 'PDU')">+ פורט</button>
+            </div>
+            <div class="device-info">
+              <div class="led-indicator" style="background:#cf222e; box-shadow:0 0 6px #cf222e;"></div>
+              <span class="device-badge" style="background:#da3633;">7</span>
+              <span class="device-name">PDU (POWER DISTRIBUTION UNIT)</span>
+            </div>
           </div>
-          <div class="device-info">
-            <div class="led-matrix"><div class="led-indicator amber"></div></div>
-            <span class="device-badge" style="background:#8957e5;">5</span>
-            <span class="device-name">NETWORK VIDEO RECORDER (NVR)</span>
+          <div class="ports-container">
+            <div class="ports-row" id="ports-device-pdu">
+              <div class="port-box" style="border-color:#da3633; color:#da3633;" onclick="handlePortClick(this, 'PDU', 'OUT1')">AC1</div>
+              <div class="port-box" style="border-color:#da3633; color:#da3633;" onclick="handlePortClick(this, 'PDU', 'OUT2')">AC2</div>
+              <div class="port-box" style="border-color:#da3633; color:#da3633;" onclick="handlePortClick(this, 'PDU', 'OUT3')">AC3</div>
+            </div>
           </div>
         </div>
-        <div class="ports-container">
-          <div class="ports-row" id="ports-device-nvr">
-            <div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, 'NVR', 'PWR')">PWR</div>
-            <div class="port-box" onclick="handlePortClick(this, 'NVR', 'LAN')">LAN</div>
-            <div class="port-box" onclick="handlePortClick(this, 'NVR', 'CAM1')">C1</div>
-          </div>
-        </div>
-      </div>
 
-      <!-- 6U: PATCH PANEL -->
-      <div class="rack-device device-patch" id="device-patch" draggable="true">
-        <div class="device-title-bar">
-          <div class="device-info">
-            <span class="device-badge" style="background:#38bdf8;">6</span>
-            <span class="device-name">PATCH PANEL 24-PORTS CAT6</span>
+        <!-- 8: WORKSTATION PC1 -->
+        <div class="rack-device device-pc-style" id="device-pc" draggable="true">
+          <div class="device-title-bar">
+            <div class="device-buttons">
+              <button class="dev-btn btn-delete" onclick="deleteDevice('device-pc')">מחק</button>
+              <button class="dev-btn btn-addport" onclick="addPortToDevice('device-pc', 'PC')">+ פורט</button>
+              <button class="dev-btn btn-cli" onclick="openTerminal('PC Terminal', 'PC1')">Terminal</button>
+              <button class="dev-btn btn-ip" onclick="openManualIPModal('PC1')">IP</button>
+            </div>
+            <div class="device-info">
+              <div class="led-indicator"></div>
+              <span class="device-name" id="name-PC1">WORKSTATION (PC1)</span>
+            </div>
           </div>
-        </div>
-        <div class="ports-container">
-          <div class="ports-row" id="ports-device-patch">
-            <div class="port-box" onclick="handlePortClick(this, 'PatchPanel', 'Port1')">1</div>
-            <div class="port-box" onclick="handlePortClick(this, 'PatchPanel', 'Port2')">2</div>
-            <div class="port-box" onclick="handlePortClick(this, 'PatchPanel', 'Port3')">3</div>
-            <div class="port-box" onclick="handlePortClick(this, 'PatchPanel', 'Port4')">4</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 7U: POWER DISTRIBUTION UNIT (PDU) -->
-      <div class="rack-device device-pdu" id="device-pdu">
-        <div class="device-title-bar">
-          <div class="device-info">
-            <div class="led-indicator" style="background:#cf222e; box-shadow:0 0 6px #cf222e;"></div>
-            <span class="device-badge" style="background:#da3633;">7</span>
-            <span class="device-name">POWER DISTRIBUTION UNIT (PDU)</span>
-          </div>
-        </div>
-        <div class="ports-container">
-          <div class="ports-row" id="ports-device-pdu">
-            <div class="port-box" style="border-color:#da3633; color:#da3633;" onclick="handlePortClick(this, 'PDU', 'OUT1')">AC1</div>
-            <div class="port-box" style="border-color:#da3633; color:#da3633;" onclick="handlePortClick(this, 'PDU', 'OUT2')">AC2</div>
-            <div class="port-box" style="border-color:#da3633; color:#da3633;" onclick="handlePortClick(this, 'PDU', 'OUT3')">AC3</div>
-            <div class="port-box" style="border-color:#da3633; color:#da3633;" onclick="handlePortClick(this, 'PDU', 'OUT4')">AC4</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Workstation Server PC1 -->
-      <div class="rack-device device-pc-style" id="device-pc" draggable="true">
-        <div class="device-title-bar">
-          <div class="device-buttons">
-            <button class="dev-btn btn-delete" onclick="deleteDevice('device-pc')">מחק</button>
-            <button class="dev-btn btn-cli" onclick="openTerminal('PC Windows CMD', 'PC1')">Terminal</button>
-            <button class="dev-btn btn-ip" onclick="openManualIPModal('PC1')">IP</button>
-          </div>
-          <div class="device-info">
-            <div class="led-indicator"></div>
-            <span class="device-name" id="name-PC1">[8U] WORKSTATION (PC1)</span>
-          </div>
-        </div>
-        <div class="ports-container">
-          <div class="ports-row" id="ports-device-pc">
-            <div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, 'PC1', 'RS232')">RS232</div>
-            <div class="port-box" onclick="handlePortClick(this, 'PC1', 'ETH0')">ETH0</div>
+          <div class="ports-container">
+            <div class="ports-row" id="ports-device-pc">
+              <div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, 'PC1', 'RS232')">RS232</div>
+              <div class="port-box" onclick="handlePortClick(this, 'PC1', 'ETH0')">ETH0</div>
+            </div>
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- Column 3: Terminal Panel -->
-    <div class="terminal-container">
-      <div class="terminal-header">
-        <span id="terminalTitle">PuTTY - Serial Terminal</span>
-        <button class="btn-top btn-reset" style="padding:1px 5px; font-size:9px;" onclick="closeTerminal()">✕</button>
+    <!-- Column 2: Side Control Column -->
+    <div class="side-control-column">
+      
+      <!-- Upper Side: Compact PuTTY Terminal -->
+      <div class="terminal-container">
+        <div class="terminal-header">
+          <span id="terminalTitle">PuTTY - Serial Terminal</span>
+          <button class="btn-top btn-reset" style="padding:1px 5px; font-size:9px;" onclick="closeTerminal()">✕</button>
+        </div>
+        <div class="terminal-screen" id="terminalScreen" onclick="focusCliInput()">
+          <div style="color:#8b949e; text-align:center; margin-top:20px;">[PuTTY Terminal Ready]<br>לחץ על CLI ברכיב כדי להתחבר ב-Serial</div>
+        </div>
       </div>
-      <div class="terminal-screen" id="terminalScreen" onclick="focusCliInput()">
-        <div style="color:#8b949e; text-align:center; margin-top:20px;">[PuTTY Terminal Ready] לחץ על כפתור CLI באחד הרכיבים כדי להתחבר בפורט סיריאלי (COM)</div>
+
+      <!-- Lower Side: 10 Lab Tasks Panel -->
+      <div class="tasks-panel">
+        <div class="panel-title">🏆 10 משימות מעבדה בארון התקשורת</div>
+        <div id="tasksListContainer"></div>
       </div>
+
     </div>
 
   </div>
@@ -768,24 +775,30 @@
   <!-- Bottom Cable Controls Toolbar -->
   <div class="bottom-toolbar">
     <div class="cable-selector-group">
-      <span style="font-weight:bold; color:#f0f6fc;">בחירת סוג כבל:</span>
+      <span style="font-weight:bold; color:#f0f6fc;">בחירת כבל:</span>
       <div class="cable-pill active" onclick="selectCable(this, 'LAN (Blue)', '#38bdf8')">
-        <div class="cable-dot" style="background:#38bdf8;"></div> כבל LAN (כחול)
+        <div class="cable-dot" style="background:#38bdf8;"></div> LAN (כחול)
       </div>
       <div class="cable-pill" onclick="selectCable(this, 'WAN / ISP (Yellow)', '#f1c40f')">
-        <div class="cable-dot" style="background:#f1c40f;"></div> כבל WAN/ISP (צהוב)
+        <div class="cable-dot" style="background:#f1c40f;"></div> WAN (צהוב)
       </div>
       <div class="cable-pill" onclick="selectCable(this, 'PoE (Green)', '#2ea043')">
-        <div class="cable-dot" style="background:#2ea043;"></div> כבל PoE (ירוק)
+        <div class="cable-dot" style="background:#2ea043;"></div> PoE (ירוק)
       </div>
       <div class="cable-pill" onclick="selectCable(this, 'Console / Mgmt (Grey)', '#c084fc')">
-        <div class="cable-dot" style="background:#c084fc;"></div> קונסול (Console/אפור)
+        <div class="cable-dot" style="background:#c084fc;"></div> קונסול (אפור)
       </div>
       <div class="cable-pill" onclick="selectCable(this, 'Power (Black)', '#484f58')">
-        <div class="cable-dot" style="background:#484f58;"></div> כבל חשמל (שחור)
+        <div class="cable-dot" style="background:#484f58;"></div> חשמל (שחור)
+      </div>
+
+      <!-- Slack Control Slider -->
+      <div class="slack-control">
+        <span style="font-size:10px; color:#58a6ff; font-weight:bold;">🔀 גמישות כבל (בטן):</span>
+        <input type="range" id="cableSlackRange" min="10" max="120" value="45" oninput="drawAllCables()" style="width:70px; cursor:pointer;">
       </div>
     </div>
-    <div>💡 טיפ: חבר כבל קונסול מ-PC לראוטר, הגדר כתובות IP לבד, ולחץ על "סיימתי לחווט" לקבלת דוח טופולוגיה!</div>
+    <div>💡 טיפ: העבר כמות בלתי מוגבלת של רכיבים בין טור ימין לטור שמאל!</div>
   </div>
 
   <!-- Floating Crazy Bot -->
@@ -794,7 +807,7 @@
     <span style="font-size:11px; font-weight:bold;">לשאלה לחץ עלי</span>
   </div>
 
-  <!-- Modern Interactive Dialog Modal -->
+  <!-- Custom Dialog Modal -->
   <div class="custom-modal-overlay" id="customDialogModal">
     <div class="custom-modal-card">
       <div class="modal-banner-header" id="modalBannerHeader">
@@ -823,8 +836,8 @@
     let executedCommands = [];
 
     let deviceStates = {
-      'Router1': { name: 'Router1', mode: 'user', ips: {}, intfUp: {}, hostnameChanged: false, saved: false, vlans: [1], trunks: [], acls: [], natEnabled: false },
-      'Switch1': { name: 'Switch1', mode: 'user', ips: {}, intfUp: {}, hostnameChanged: false, saved: false, vlans: [1], trunks: [], macTable: [] },
+      'Router1': { name: 'Router1', mode: 'user', ips: {}, intfUp: {}, hostnameChanged: false, saved: false, vlans: [1], trunks: [] },
+      'Switch1': { name: 'Switch1', mode: 'user', ips: {}, intfUp: {}, hostnameChanged: false, saved: false, vlans: [1], trunks: [] },
       'PC1': { name: 'PC1', ip: '', mask: '', gw: '' }
     };
 
@@ -833,43 +846,59 @@
       renderTasksList();
     });
 
+    /* FULL FLEXIBLE DRAG AND DROP BETWEEN INDEPENDENT RACK COLUMNS */
     function initDragAndDrop() {
-      const rack = document.getElementById('rackContainer');
+      const columns = document.querySelectorAll('.rack-column');
       let draggedItem = null;
 
-      rack.addEventListener('dragstart', (e) => {
+      document.addEventListener('dragstart', (e) => {
         if (e.target.classList.contains('rack-device')) {
           draggedItem = e.target;
           e.target.classList.add('dragging');
         }
       });
 
-      rack.addEventListener('dragend', (e) => {
+      document.addEventListener('dragend', (e) => {
         if (e.target.classList.contains('rack-device')) {
           e.target.classList.remove('dragging');
+          columns.forEach(col => col.classList.remove('drag-over'));
           draggedItem = null;
           drawAllCables();
         }
       });
 
-      rack.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        const afterElement = getDragAfterElement(rack, e.clientY);
-        if (draggedItem) {
-          if (afterElement == null) rack.appendChild(draggedItem);
-          else rack.insertBefore(draggedItem, afterElement);
+      columns.forEach(col => {
+        col.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          col.classList.add('drag-over');
+          if (!draggedItem) return;
+
+          const afterElement = getColumnDragAfterElement(col, e.clientY);
+          if (afterElement == null) {
+            col.appendChild(draggedItem);
+          } else {
+            col.insertBefore(draggedItem, afterElement);
+          }
           drawAllCables();
-        }
+        });
+
+        col.addEventListener('dragleave', () => {
+          col.classList.remove('drag-over');
+        });
       });
     }
 
-    function getDragAfterElement(container, y) {
-      const draggables = [...container.querySelectorAll('.rack-device:not(.dragging)')];
+    function getColumnDragAfterElement(column, y) {
+      const draggables = [...column.querySelectorAll('.rack-device:not(.dragging)')];
+
       return draggables.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) return { offset: offset, element: child };
-        else return closest;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
       }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
@@ -927,11 +956,13 @@
       }
     }
 
+    /* CURVED DYNAMIC CABLES WITH SLACK FLEXIBILITY */
     function drawAllCables() {
       const svg = document.getElementById('cableSvgContainer');
       if (!svg) return;
       svg.innerHTML = '';
       const appRect = document.getElementById('appBodyContainer').getBoundingClientRect();
+      const slackVal = parseFloat(document.getElementById('cableSlackRange')?.value || 45);
 
       connections.forEach((conn) => {
         if (!document.body.contains(conn.elem1) || !document.body.contains(conn.elem2)) return;
@@ -945,15 +976,16 @@
         const y2 = rect2.top + rect2.height / 2 - appRect.top;
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        const dx = Math.abs(x2 - x1) * 0.5;
-        const dy = (y2 - y1) * 0.2;
-        const d = `M ${x1} ${y1} C ${x1 - dx - 20} ${y1 + dy + 40}, ${x2 - dx - 20} ${y2 - dy + 40}, ${x2} ${y2}`;
+        
+        const dx = (x2 - x1) * 0.2;
+        const dy = Math.max(Math.abs(y2 - y1) * 0.3, slackVal);
+        const d = `M ${x1} ${y1} C ${x1 + dx} ${y1 + dy + slackVal}, ${x2 - dx} ${y2 + dy + slackVal}, ${x2} ${y2}`;
 
         path.setAttribute('d', d);
         path.setAttribute('stroke', conn.color);
-        path.setAttribute('stroke-width', '3.5');
+        path.setAttribute('stroke-width', '3');
         path.setAttribute('fill', 'none');
-        path.setAttribute('opacity', '0.92');
+        path.setAttribute('opacity', '0.9');
         path.setAttribute('stroke-linecap', 'round');
 
         svg.appendChild(path);
@@ -967,23 +999,23 @@
     requestAnimationFrame(animationLoop);
 
     function addDevice(type) {
-      const rack = document.getElementById('rackContainer');
+      const targetCol = document.getElementById('rackColRight');
       const id = 'dev-' + Date.now();
-      const count = rack.querySelectorAll('.rack-device').length + 1;
+      const count = document.querySelectorAll('.rack-device').length + 1;
       const devName = `${type}${count}`;
 
       deviceStates[devName] = { name: devName, mode: 'user', ips: {}, intfUp: {}, vlans: [1], trunks: [] };
 
       let html = '';
       if (type === 'Router') {
-        html = `<div class="rack-device device-l3" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-addport" onclick="addPortToDevice('${id}', 'Router')">+ פורט</button><button class="dev-btn btn-cli" onclick="promptPuttyConnection('${devName}')">PuTTY CLI</button><button class="dev-btn btn-ip" onclick="openManualIPModal('${devName}')">IP</button></div><div class="device-info"><div class="led-matrix"><div class="led-indicator"></div></div><span class="device-name" id="name-${devName}">CISCO ROUTER ${devName}</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, '${devName}', 'PWR')">PWR</div><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'Console')">Con</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'g0/0')">g0/0</div></div></div></div>`;
+        html = `<div class="rack-device device-l3" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-addport" onclick="addPortToDevice('${id}', 'Router')">+ פורט</button><button class="dev-btn btn-cli" onclick="promptPuttyConnection('${devName}')">PuTTY</button><button class="dev-btn btn-ip" onclick="openManualIPModal('${devName}')">IP</button></div><div class="device-info"><div class="led-matrix"><div class="led-indicator"></div></div><span class="device-name" id="name-${devName}">ROUTER ${devName}</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, '${devName}', 'PWR')">PWR</div><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'Console')">Con</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'g0/0')">g0/0</div></div></div></div>`;
       } else if (type === 'Switch') {
-        html = `<div class="rack-device device-switch24" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-addport" onclick="addPortToDevice('${id}', 'Switch')">+ פורט</button><button class="dev-btn btn-cli" onclick="promptPuttyConnection('${devName}')">PuTTY CLI</button><button class="dev-btn btn-ip" onclick="openManualIPModal('${devName}')">IP</button></div><div class="device-info"><div class="led-matrix"><div class="led-indicator"></div></div><span class="device-name" id="name-${devName}">CATALYST SWITCH ${devName}</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, '${devName}', 'PWR')">PWR</div><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'Console')">Con</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'Fa0/1')">F0/1</div></div></div></div>`;
+        html = `<div class="rack-device device-switch24" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-addport" onclick="addPortToDevice('${id}', 'Switch')">+ פורט</button><button class="dev-btn btn-cli" onclick="promptPuttyConnection('${devName}')">PuTTY</button><button class="dev-btn btn-ip" onclick="openManualIPModal('${devName}')">IP</button></div><div class="device-info"><div class="led-matrix"><div class="led-indicator"></div></div><span class="device-name" id="name-${devName}">SWITCH ${devName}</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#484f58; color:#8b949e;" onclick="handlePortClick(this, '${devName}', 'PWR')">PWR</div><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'Console')">Con</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'Fa0/1')">F0/1</div></div></div></div>`;
       } else {
-        html = `<div class="rack-device device-pc-style" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-cli" onclick="openTerminal('PC Terminal', '${devName}')">Terminal</button><button class="dev-btn btn-ip" onclick="openManualIPModal('${devName}')">IP</button></div><div class="device-info"><div class="led-indicator"></div><span class="device-name" id="name-${devName}">WORKSTATION (${devName})</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'RS232')">RS232</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'ETH0')">ETH0</div></div></div></div>`;
+        html = `<div class="rack-device device-pc-style" id="${id}" draggable="true"><div class="device-title-bar"><div class="device-buttons"><button class="dev-btn btn-delete" onclick="deleteDevice('${id}')">מחק</button><button class="dev-btn btn-addport" onclick="addPortToDevice('${id}', 'PC')">+ פורט</button><button class="dev-btn btn-cli" onclick="openTerminal('PC Terminal', '${devName}')">Terminal</button><button class="dev-btn btn-ip" onclick="openManualIPModal('${devName}')">IP</button></div><div class="device-info"><div class="led-indicator"></div><span class="device-name" id="name-${devName}">WORKSTATION (${devName})</span></div></div><div class="ports-container"><div class="ports-row" id="ports-${id}"><div class="port-box" style="border-color:#c084fc; color:#c084fc;" onclick="handlePortClick(this, '${devName}', 'RS232')">RS232</div><div class="port-box" onclick="handlePortClick(this, '${devName}', 'ETH0')">ETH0</div></div></div></div>`;
       }
 
-      rack.insertAdjacentHTML('beforeend', html);
+      targetCol.insertAdjacentHTML('beforeend', html);
       initDragAndDrop();
       drawAllCables();
     }
@@ -992,14 +1024,25 @@
       const portsRow = document.getElementById(`ports-${deviceId}`);
       if (!portsRow) return;
       const portCount = portsRow.querySelectorAll('.port-box').length;
-      const devNameSpan = document.querySelector(`#${deviceId} .device-name`)?.innerText || deviceId;
-      const shortName = devNameSpan.includes('ROUTER') ? 'Router1' : (devNameSpan.includes('SWITCH') ? 'Switch1' : deviceId);
+      
+      let devName = document.querySelector(`#${deviceId} .device-name`)?.innerText || deviceId;
+      devName = devName.replace(/[^a-zA-Z0-9_-]/g, '').trim() || deviceId;
 
-      let newPortName = type === 'Router' ? `g0/0/${portCount}` : `Fa0/${portCount}`;
+      let newPortName = `P${portCount}`;
+      if (type === 'Router') newPortName = `g0/0/${portCount}`;
+      else if (type === 'Switch') newPortName = `Fa0/${portCount}`;
+      else if (type === 'PoE') newPortName = `PoE-${portCount}`;
+      else if (type === 'Firewall') newPortName = `Eth0/${portCount}`;
+      else if (type === 'NVR') newPortName = `CAM${portCount}`;
+      else if (type === 'PatchPanel') newPortName = `Port${portCount}`;
+      else if (type === 'PDU') newPortName = `AC${portCount}`;
+      else if (type === 'PC') newPortName = `ETH${portCount-1}`;
+
       const newPortElem = document.createElement('div');
       newPortElem.className = 'port-box';
+      if (type === 'PDU') newPortElem.style.cssText = 'border-color:#da3633; color:#da3633;';
       newPortElem.innerText = newPortName;
-      newPortElem.setAttribute('onclick', `handlePortClick(this, '${shortName}', '${newPortName}')`);
+      newPortElem.setAttribute('onclick', `handlePortClick(this, '${devName}', '${newPortName}')`);
       portsRow.appendChild(newPortElem);
       drawAllCables();
     }
@@ -1029,14 +1072,10 @@
         'banner-info',
         '💻 התחברות ל-PuTTY (Serial Session)',
         `
-          <p>הגדר את חיבור ה-Serial עבור <b>${deviceName}</b> (הכנס פורט סיריאלי לדוגמה: <b>COM3</b>):</p>
-          <div style="margin-top:12px;">
-            <label>Serial Line:</label><br>
-            <input type="text" id="puttyComInput" value="COM3" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:6px; border-radius:4px; margin-top:4px; font-family:monospace;">
-          </div>
+          <p>הגדר חיבור Serial עבור <b>${deviceName}</b> (למשל: <b>COM3</b>):</p>
           <div style="margin-top:8px;">
-            <label>Speed (Baud):</label><br>
-            <input type="text" value="9600" disabled style="width:100%; background:#0d1117; border:1px solid #30363d; color:#8b949e; padding:6px; border-radius:4px; margin-top:4px;">
+            <label>Serial Line:</label><br>
+            <input type="text" id="puttyComInput" value="COM3" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:5px; border-radius:4px; margin-top:3px; font-family:monospace;">
           </div>
         `,
         () => {
@@ -1048,7 +1087,7 @@
 
     function openRealPuTTYTerminal(comPort, deviceName) {
       currentDevice = deviceName;
-      document.getElementById('terminalTitle').innerText = `PuTTY (${comPort}) - Connected to ${deviceName}`;
+      document.getElementById('terminalTitle').innerText = `PuTTY (${comPort}) - ${deviceName}`;
       const screen = document.getElementById('terminalScreen');
 
       const hasConsoleConn = connections.some(c => 
@@ -1058,11 +1097,11 @@
       );
 
       if (!hasConsoleConn) {
-        screen.innerHTML = `=== PuTTY - Serial Connection on ${comPort} (9600 baud) ===\n\n[FATAL ERROR]: Unable to open connection to ${comPort}!\n-> לא נמצא כבל קונסול פיזי (Rollover) המחובר בין מחשב PC לבין פורט ה-Console ברכיב ${deviceName}!\nאנא חבר כבל קונסול בארון התקשורת ונסה שוב.\n\n`;
+        screen.innerHTML = `=== PuTTY (${comPort}) ===\n[ERROR]: No Console cable detected between PC & ${deviceName}!\n\n`;
         cliMode = 'locked';
       } else {
         cliMode = deviceStates[deviceName]?.mode || 'user';
-        screen.innerHTML = `=== PuTTY - Serial Connection on ${comPort} (9600 baud, 8-N-1) ===\n\nCisco IOS Software, ISR Software (X86_64_LINUX_IOSD)\nSystem Bootstrap, Version 15.4(3)M3\nConnected successfully via ${comPort}!\n\n`;
+        screen.innerHTML = `=== PuTTY (${comPort}, 9600 baud) ===\nConnected to ${deviceName} successfully!\n\n`;
       }
       renderCliPrompt();
     }
@@ -1072,7 +1111,7 @@
       document.getElementById('terminalTitle').innerText = `Terminal - ${deviceName}`;
       const screen = document.getElementById('terminalScreen');
       cliMode = 'cmd';
-      screen.innerHTML = `Microsoft Windows [Version 10.0.19045]\n(c) Microsoft Corporation. All rights reserved.\n\n`;
+      screen.innerHTML = `Microsoft Windows [Version 10.0.19045]\n\n`;
       renderCliPrompt();
     }
 
@@ -1090,11 +1129,10 @@
       promptSpan.className = 'cli-prompt';
       const devName = deviceStates[currentDevice]?.name || currentDevice;
 
-      if (cliMode === 'cmd') promptSpan.innerText = `C:\\Users\\Student> `;
+      if (cliMode === 'cmd') promptSpan.innerText = `C:\\Users> `;
       else if (cliMode === 'user') promptSpan.innerText = `${devName}> `;
       else if (cliMode === 'priv') promptSpan.innerText = `${devName}# `;
       else if (cliMode === 'config') promptSpan.innerText = `${devName}(config)# `;
-      else if (cliMode === 'if') promptSpan.innerText = `${devName}(config-if)# `;
 
       const input = document.createElement('input');
       input.type = 'text';
@@ -1148,33 +1186,19 @@
 
       if (lower === 'enable' || lower === 'en') cliMode = 'priv';
       else if (lower === 'configure terminal' || lower === 'conf t') cliMode = 'config';
-      else if (lower.startsWith('int')) cliMode = 'if';
       else if (lower.startsWith('hostname ')) {
         const newHn = cmd.split(' ')[1];
         if (dev) { dev.name = newHn; dev.hostnameChanged = true; }
       }
-      else if (lower.startsWith('ip address ')) {
-        const parts = cmd.split(' ');
-        if (dev && parts.length >= 3) {
-          dev.ips['activeInterface'] = { ip: parts[2], mask: parts[3] || '255.255.255.0' };
-        }
-      }
-      else if (lower.includes('vlan')) {
-        const vNum = parseInt(lower.replace(/[^0-9]/g, '')) || 10;
-        if (dev && !dev.vlans.includes(vNum)) dev.vlans.push(vNum);
-      }
-      else if (lower.includes('trunk')) {
-        if (dev && !dev.trunks.includes('trunk')) dev.trunks.push('Trunk Active');
-      }
       else if (lower === 'write memory' || lower === 'wr') {
         if (dev) dev.saved = true;
-        appendTerminalOutput(`[OK]\n Building configuration...\n[OK]\n`);
+        appendTerminalOutput(`[OK]\nBuilding configuration...\n[OK]\n`);
       }
       else if (lower === 'cls' || lower === 'clear') {
         document.getElementById('terminalScreen').innerHTML = '';
       }
       else {
-        appendTerminalOutput(`\n% Command accepted and processed successfully\n`);
+        appendTerminalOutput(`\n% Command accepted\n`);
       }
 
       if (dev) dev.mode = cliMode;
@@ -1184,32 +1208,26 @@
       const cur = deviceStates[deviceName] || {};
       showCustomModal(
         'banner-info',
-        `🌐 הגדרת כתובות ידנית עבור ${deviceName}`,
+        `🌐 הגדרת כתובות עבור ${deviceName}`,
         `
-          <p>הכנס את כתובות ה-IP שבחרת עבור רכיב זה:</p>
-          <div style="margin-top:10px;">
+          <p>הכנס את כתובות ה-IP שבחרת:</p>
+          <div style="margin-top:8px;">
             <label>IP Address:</label><br>
-            <input type="text" id="manualIpVal" value="${cur.ip || cur.ips?.['activeInterface']?.ip || ''}" placeholder="192.168.1.X" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:6px; border-radius:4px; margin-top:4px; font-family:monospace;">
+            <input type="text" id="manualIpVal" value="${cur.ip || ''}" placeholder="192.168.1.X" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:5px; border-radius:4px; margin-top:3px; font-family:monospace;">
           </div>
-          <div style="margin-top:8px;">
+          <div style="margin-top:6px;">
             <label>Subnet Mask:</label><br>
-            <input type="text" id="manualMaskVal" value="${cur.mask || cur.ips?.['activeInterface']?.mask || '255.255.255.0'}" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:6px; border-radius:4px; margin-top:4px; font-family:monospace;">
-          </div>
-          <div style="margin-top:8px;">
-            <label>Default Gateway:</label><br>
-            <input type="text" id="manualGwVal" value="${cur.gw || ''}" placeholder="192.168.1.1" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:6px; border-radius:4px; margin-top:4px; font-family:monospace;">
+            <input type="text" id="manualMaskVal" value="${cur.mask || '255.255.255.0'}" style="width:100%; background:#0d1117; border:1px solid #30363d; color:white; padding:5px; border-radius:4px; margin-top:3px; font-family:monospace;">
           </div>
         `,
         () => {
           const ip = document.getElementById('manualIpVal')?.value.trim();
           const mask = document.getElementById('manualMaskVal')?.value.trim();
-          const gw = document.getElementById('manualGwVal')?.value.trim();
           if (deviceStates[deviceName]) {
             deviceStates[deviceName].ip = ip;
             deviceStates[deviceName].mask = mask;
-            deviceStates[deviceName].gw = gw;
           }
-          alert(`הגדרות ה-IP עבור ${deviceName} נשמרו בהצלחה!`);
+          alert(`הגדרות IP נשמרו בהצלחה!`);
         }
       );
     }
@@ -1217,61 +1235,37 @@
     function openFullTopologyReport() {
       let connRows = '';
       if (connections.length === 0) {
-        connRows = '<tr><td colspan="4" style="text-align:center; color:#8b949e;">אין עדיין כבלים מחוברים בארון.</td></tr>';
+        connRows = '<tr><td colspan="4" style="text-align:center; color:#8b949e;">אין עדיין כבלים מחוברים.</td></tr>';
       } else {
         connections.forEach((c, idx) => {
           connRows += `<tr><td>${idx+1}</td><td>${c.dev1} (${c.port1Name})</td><td>${c.dev2} (${c.port2Name})</td><td>${c.cableType}</td></tr>`;
         });
       }
 
-      let ipRows = '';
-      Object.keys(deviceStates).forEach(devKey => {
-        const d = deviceStates[devKey];
-        const ipAddr = d.ip || d.ips?.['activeInterface']?.ip || 'לא הוגדר';
-        const maskAddr = d.mask || d.ips?.['activeInterface']?.mask || '-';
-        ipRows += `<tr><td>${devKey} (${d.name})</td><td>${ipAddr}</td><td>${maskAddr}</td><td>VLAN: ${d.vlans?.join(', ') || 1}</td></tr>`;
-      });
-
       showCustomModal(
         'banner-success',
-        '🚀 דוח טופולוגיה לוגית ופיזית מלאה',
+        '🚀 דוח טופולוגיה לוגית ופיזית',
         `
-          <p>כל הכבוד! להלן ניתוח מלא של תוצאת החיבורים וההגדרות שהוזנו במעבדה:</p>
-          
-          <h4 style="color:#58a6ff; margin-top:12px;">🔌 טבלת חיווט פיזי (Physical Connections)</h4>
+          <p>להלן ניתוח מלא של החיווט בארון הדו-טורי:</p>
           <table class="topo-table">
-            <tr><th>#</th><th>צד א' (Device & Port)</th><th>צד ב' (Device & Port)</th><th>סוג כבל</th></tr>
+            <tr><th>#</th><th>צד א'</th><th>צד ב'</th><th>סוג כבל</th></tr>
             ${connRows}
           </table>
-
-          <h4 style="color:#58a6ff; margin-top:14px;">🌐 טבלת כתובות IP והגדרות ממשק</h4>
-          <table class="topo-table">
-            <tr><th>רכיב</th><th>כתובת IP</th><th>Subnet Mask</th><th>VLAN / Trunks</th></tr>
-            ${ipRows}
-          </table>
-
-          <h4 style="color:#58a6ff; margin-top:14px;">📋 פרוטוקולים ושירותים (MAC, ARP, Port Security, NAT, ACL)</h4>
-          <div class="feedback-box-section" style="font-family:monospace; font-size:11px;">
-            • <b>MAC Table:</b> נלמדו אוטומטית דרך פורטי הסוויץ' הפעילים.<br>
-            • <b>ARP Table:</b> סונכרן בהצלחה עבור כתובות ה-IP שהוגדרו ברשת המקומית.<br>
-            • <b>Port Security:</b> מוגדר במצבי ברירת מחדל (Sticky Learning מוכן להפעלה).<br>
-            • <b>Power Distribution:</b> כבלי מתח מחוברים מה-PDU לרכיבי התקשורת בארון.
-          </div>
         `
       );
     }
 
     const labTasks = [
-      { id: 1, title: "1. חיבור ראוטר לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל LAN מ-g0/0/0 בראוטר ל-Fa0/1 בסוויץ'", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('Router') && c.dev2.includes('Switch')) || (c.dev2.includes('Router') && c.dev1.includes('Switch'))) },
-      { id: 2, title: "2. חיבור Patch Panel לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל LAN מ-Port1 ב-Patch Panel ל-Fa0/3 בסוויץ'", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('PatchPanel') && c.dev2.includes('Switch')) || (c.dev2.includes('PatchPanel') && c.dev1.includes('Switch'))) },
-      { id: 3, title: "3. אספקת חשמל מה-PDU", diff: "Easy", diffClass: "diff-easy", phys: "כבל חשמל שחור מ-PDU לפורט PWR באחד הרכיבים", soft: "ללא", check: () => connections.some(c => c.cableType.includes('Power') || c.color === '#484f58') },
-      { id: 4, title: "4. חיבור NVR ל-PoE Switch", diff: "Med", diffClass: "diff-med", phys: "כבל PoE ירוק מ-CAM1 ב-NVR ל-P1 ב-PoE Switch", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('NVR') && c.dev2.includes('PoE')) || (c.dev2.includes('NVR') && c.dev1.includes('PoE'))) },
-      { id: 5, title: "5. חיבור חומת אש (Firewall)", diff: "Med", diffClass: "diff-med", phys: "כבל LAN מ-E0/1 ב-ASA ל-Fa0/4 בסוויץ'", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('ASA') && c.dev2.includes('Switch')) || (c.dev2.includes('ASA') && c.dev1.includes('Switch'))) },
-      { id: 6, title: "6. חיבור Console ב-PuTTY", diff: "Easy", diffClass: "diff-easy", phys: "כבל קונסול מ-RS232 ב-PC1 ל-Console בראוטר", soft: "התחבר עם COM3", check: () => connections.some(c => c.cableType.includes('Console') || c.color === '#c084fc') },
-      { id: 7, title: "7. הגדרת Hostname בראוטר", diff: "Easy", diffClass: "diff-easy", phys: "אין", soft: "conf t -> hostname R1", check: () => deviceStates['Router1']?.hostnameChanged || executedCommands.some(c => c.cmd.startsWith('hostname')) },
-      { id: 8, title: "8. הגדרת IP בראוטר", diff: "Med", diffClass: "diff-med", phys: "אין", soft: "ip address ידני / CLI", check: () => deviceStates['Router1']?.ip !== '' || Object.keys(deviceStates['Router1']?.ips || {}).length > 0 },
-      { id: 9, title: "9. בדיקת Ping מ-PC1", diff: "Hard", diffClass: "diff-hard", phys: "אין", soft: "ב-PC CMD הרץ: ping", check: () => executedCommands.some(c => c.cmd.startsWith('ping')) },
-      { id: 10, title: "10. שמירת קונפיגורציה", diff: "Hard", diffClass: "diff-hard", phys: "אין", soft: "write memory בראוטר", check: () => deviceStates['Router1']?.saved || executedCommands.some(c => c.cmd === 'write memory' || c.cmd === 'wr') }
+      { id: 1, title: "1. חיבור ראוטר לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל LAN מ-g0/0/0 ל-Fa0/1", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('Router') && c.dev2.includes('Switch')) || (c.dev2.includes('Router') && c.dev1.includes('Switch'))) },
+      { id: 2, title: "2. חיבור Patch Panel לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל LAN מ-Port1 ל-Fa0/3", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('PatchPanel') && c.dev2.includes('Switch')) || (c.dev2.includes('PatchPanel') && c.dev1.includes('Switch'))) },
+      { id: 3, title: "3. אספקת חשמל מה-PDU", diff: "Easy", diffClass: "diff-easy", phys: "כבל חשמל מ-PDU לפורט PWR", soft: "ללא", check: () => connections.some(c => c.cableType.includes('Power') || c.color === '#484f58') },
+      { id: 4, title: "4. חיבור NVR ל-PoE Switch", diff: "Med", diffClass: "diff-med", phys: "כבל PoE ירוק מ-CAM1 ל-P1", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('NVR') && c.dev2.includes('PoE')) || (c.dev2.includes('NVR') && c.dev1.includes('PoE'))) },
+      { id: 5, title: "5. חיבור חומת אש (Firewall)", diff: "Med", diffClass: "diff-med", phys: "כבל LAN מ-E0/1 ל-Fa0/4", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('ASA') && c.dev2.includes('Switch')) || (c.dev2.includes('ASA') && c.dev1.includes('Switch'))) },
+      { id: 6, title: "6. חיבור Console ב-PuTTY", diff: "Easy", diffClass: "diff-easy", phys: "כבל קונסול מ-RS232 ל-Console", soft: "התחבר ב-COM3", check: () => connections.some(c => c.cableType.includes('Console') || c.color === '#c084fc') },
+      { id: 7, title: "7. הגדרת Hostname בראוטר", diff: "Easy", diffClass: "diff-easy", phys: "אין", soft: "hostname R1", check: () => deviceStates['Router1']?.hostnameChanged || executedCommands.some(c => c.cmd.startsWith('hostname')) },
+      { id: 8, title: "8. הגדרת IP בראוטר", diff: "Med", diffClass: "diff-med", phys: "אין", soft: "הגדרת IP ידנית", check: () => deviceStates['Router1']?.ip !== '' },
+      { id: 9, title: "9. בדיקת Ping מ-PC1", diff: "Hard", diffClass: "diff-hard", phys: "אין", soft: "הרצת ping ב-Terminal", check: () => executedCommands.some(c => c.cmd.startsWith('ping')) },
+      { id: 10, title: "10. שמירת קונפיגורציה", diff: "Hard", diffClass: "diff-hard", phys: "אין", soft: "write memory", check: () => deviceStates['Router1']?.saved || executedCommands.some(c => c.cmd === 'write memory' || c.cmd === 'wr') }
     ];
 
     function renderTasksList() {
@@ -1282,11 +1276,10 @@
         html += `
           <div class="task-card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:11px; font-weight:bold; color:#f0f6fc;">${t.title}</span>
+              <span style="font-size:10.5px; font-weight:bold; color:#f0f6fc;">${t.title}</span>
               <span class="badge-diff ${t.diffClass}">${t.diff}</span>
             </div>
-            <div style="font-size:10px; color:#8b949e; margin-top:4px;">🔌 <b>פיזי:</b> ${t.phys}</div>
-            <div style="font-size:10px; color:#8b949e;">💻 <b>CLI:</b> ${t.soft}</div>
+            <div style="font-size:9.5px; color:#8b949e; margin-top:3px;">🔌 <b>פיזי:</b> ${t.phys}</div>
             <button class="btn-check-task" onclick="checkTaskFeedback(${t.id})">בדוק משימה</button>
           </div>
         `;
@@ -1299,31 +1292,22 @@
       const isDone = task.check();
 
       if (isDone) {
-        showCustomModal(
-          'banner-success',
-          '⭐ משימה בוצעה בהצלחה!',
-          `<p style="color:#3fb950; font-weight:bold;">כל הכבוד! ביצעת את המשימה בצורה מקצועית.</p>`
-        );
+        showCustomModal('banner-success', '⭐ משימה בוצעה בהצלחה!', `<p style="color:#3fb950; font-weight:bold;">כל הכבוד! המשימה בוצעה כהלכה.</p>`);
       } else {
-        showCustomModal(
-          'banner-warning',
-          '💡 משימה בתהליך ביצוע',
-          `<p style="color:#d29922; font-weight:bold;">הטופולוגיה או הגדרות ה-IP עדיין ממתינים להשלמת השלבים.</p>`
-        );
+        showCustomModal('banner-warning', '💡 משימה בתהליך ביצוע', `<p style="color:#d29922; font-weight:bold;">החיווט או הגדרות ה-CLI עדיין לא הושלמו.</p>`);
       }
-      renderTasksList();
     }
 
     function openTopologyModal() {
       let connListHtml = '';
       if (connections.length === 0) {
-        connListHtml = '<p style="color:#8b949e;">אין חיבורי כבלים פעילים בארון כרגע.</p>';
+        connListHtml = '<p style="color:#8b949e;">אין חיבורי כבלים פעילים כרגע.</p>';
       } else {
         connections.forEach((c, i) => {
-          connListHtml += `<div style="background:#0d1117; padding:6px 10px; border-radius:4px; margin-bottom:4px; font-family:monospace; direction:ltr;">#${i+1}: [${c.dev1} - ${c.port1Name}] <--> [${c.dev2} - ${c.port2Name}] (${c.cableType})</div>`;
+          connListHtml += `<div style="background:#0d1117; padding:5px 8px; border-radius:4px; margin-bottom:4px; font-family:monospace; direction:ltr;">#${i+1}: [${c.dev1} - ${c.port1Name}] <--> [${c.dev2} - ${c.port2Name}] (${c.cableType})</div>`;
         });
       }
-      showCustomModal('banner-info', '📊 ניתוח טופולוגיית ארון תקשורת', `<div class="feedback-box-section">${connListHtml}</div>`);
+      showCustomModal('banner-info', '📊 ניתוח טופולוגיית ארון', `<div class="feedback-box-section">${connListHtml}</div>`);
     }
 
     let currentConfirmAction = null;
@@ -1347,7 +1331,7 @@
     }
 
     function resetSimulator() {
-      showCustomModal('banner-warning', '🔄 איפוס מעבדה', '<p>האם ברצונך לאפס את כל החיבורים וההגדרות בארון?</p>', () => location.reload());
+      showCustomModal('banner-warning', '🔄 איפוס מעבדה', '<p>האם לאפס את כל החיווט וההגדרות בארון?</p>', () => location.reload());
     }
 
     function closeTerminal() { document.getElementById('terminalScreen').innerHTML = ''; }
