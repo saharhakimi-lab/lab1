@@ -38,7 +38,6 @@
       direction: rtl;
     }
 
-    /* Top Header */
     header {
       background-color: var(--header-bg);
       color: white;
@@ -91,7 +90,6 @@
       100% { transform: rotate(360deg) scale(1); box-shadow: 0 0 8px #00f0ff; }
     }
 
-    /* Main Dashboard Layout */
     .app-body {
       display: flex;
       flex: 1;
@@ -101,7 +99,6 @@
       position: relative;
     }
 
-    /* Column 1: TWO-COLUMN RACK CABINET FRAME */
     .rack-wrapper {
       flex: 2.2;
       background: #05070a;
@@ -116,7 +113,6 @@
       z-index: 2;
     }
 
-    /* INDEPENDENT DRAGGABLE COLUMNS */
     .rack-column {
       flex: 1;
       min-height: 100%;
@@ -229,7 +225,6 @@
       content: ''; position: absolute; bottom: 1px; right: 2px; width: 3px; height: 3px; border-radius: 50%; background: #3fb950; box-shadow: 0 0 4px #3fb950;
     }
 
-    /* Column 2: Side Panel (Terminal Upper + Tasks Lower) */
     .side-control-column {
       flex: 1;
       min-width: 330px;
@@ -337,7 +332,6 @@
 
     .btn-check-task:hover { background: #2ea043; }
 
-    /* Bottom Cable Controls Toolbar */
     .bottom-toolbar {
       height: 50px;
       background-color: #161b22;
@@ -352,18 +346,18 @@
       z-index: 50;
     }
 
-    .cable-selector-group { display: flex; align-items: center; gap: 8px; }
+    .cable-selector-group { display: flex; align-items: center; gap: 6px; }
 
     .cable-pill {
       background: #0d1117;
       border: 1px solid #30363d;
-      padding: 4px 8px;
+      padding: 4px 7px;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 5px;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
       transition: all 0.2s;
     }
@@ -530,7 +524,7 @@
 
   <header>
     <div class="header-title-container">
-      <img src="https://lh3.googleusercontent.com/d/1t9QaPCKLvtAhWncetA83ALY8EIvpnFte" class="crazy-avatar-img" alt="Crazy Avatar" onclick="alert('🤖: הטורים בארון עכשיו עצמאיים לחלוטין! גמה רכיבים שבא לך בכל צד!')">
+      <img src="https://lh3.googleusercontent.com/d/1t9QaPCKLvtAhWncetA83ALY8EIvpnFte" class="crazy-avatar-img" alt="Crazy Avatar" onclick="alert('🤖: חבר כבל קונסול אפור מ-RS232 ב-PC1 לפורט Con בראוטר בלבד!')">
       <div style="font-weight: bold; font-size: 13px;">מעבדת התקשוב של סהר - בונים, מחליפים ומחווטים בזמן אמת</div>
     </div>
 
@@ -547,12 +541,8 @@
   <div class="app-body" id="appBodyContainer">
     <svg id="cableSvgContainer"></svg>
 
-    <!-- Column 1 (Left/Center Main): RACK CABINET WITH 2 INDEPENDENT COLUMNS -->
     <div class="rack-wrapper" id="rackContainer">
-      
-      <!-- RIGHT COLUMN (TUR 1) -->
       <div class="rack-column" id="rackColRight">
-        <!-- 1: L3 SWITCH / ROUTER -->
         <div class="rack-device device-l3" id="device-router" draggable="true">
           <div class="device-title-bar">
             <div class="device-buttons">
@@ -562,10 +552,7 @@
               <button class="dev-btn btn-ip" onclick="openManualIPModal('Router1')">IP</button>
             </div>
             <div class="device-info">
-              <div class="led-matrix">
-                <div class="led-indicator"></div>
-                <div class="led-indicator amber"></div>
-              </div>
+              <div class="led-matrix"><div class="led-indicator"></div><div class="led-indicator amber"></div></div>
               <span class="device-badge" style="background:#1f6feb;">1</span>
               <span class="device-name" id="name-Router1">L3 SWITCH / ROUTER</span>
             </div>
@@ -581,7 +568,6 @@
           </div>
         </div>
 
-        <!-- 2: MANAGED 24-PORT SWITCH -->
         <div class="rack-device device-switch24" id="device-switch" draggable="true">
           <div class="device-title-bar">
             <div class="device-buttons">
@@ -608,7 +594,6 @@
           </div>
         </div>
 
-        <!-- 3: PoE SWITCH -->
         <div class="rack-device device-poe" id="device-poe" draggable="true">
           <div class="device-title-bar">
             <div class="device-buttons">
@@ -632,7 +617,6 @@
           </div>
         </div>
 
-        <!-- 4: FIREWALL APPLIANCE -->
         <div class="rack-device device-firewall" id="device-fw" draggable="true">
           <div class="device-title-bar">
             <div class="device-buttons">
@@ -657,9 +641,7 @@
         </div>
       </div>
 
-      <!-- LEFT COLUMN (TUR 2) -->
       <div class="rack-column" id="rackColLeft">
-        <!-- 5: NVR -->
         <div class="rack-device device-nvr" id="device-nvr" draggable="true">
           <div class="device-title-bar">
             <div class="device-buttons">
@@ -681,7 +663,6 @@
           </div>
         </div>
 
-        <!-- 6: PATCH PANEL -->
         <div class="rack-device device-patch" id="device-patch" draggable="true">
           <div class="device-title-bar">
             <div class="device-buttons">
@@ -702,7 +683,6 @@
           </div>
         </div>
 
-        <!-- 7: PDU -->
         <div class="rack-device device-pdu" id="device-pdu" draggable="true">
           <div class="device-title-bar">
             <div class="device-buttons">
@@ -723,7 +703,6 @@
           </div>
         </div>
 
-        <!-- 8: WORKSTATION PC1 -->
         <div class="rack-device device-pc-style" id="device-pc" draggable="true">
           <div class="device-title-bar">
             <div class="device-buttons">
@@ -745,13 +724,9 @@
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- Column 2: Side Control Column -->
     <div class="side-control-column">
-      
-      <!-- Upper Side: Compact PuTTY Terminal -->
       <div class="terminal-container">
         <div class="terminal-header">
           <span id="terminalTitle">PuTTY - Serial Terminal</span>
@@ -762,58 +737,53 @@
         </div>
       </div>
 
-      <!-- Lower Side: 10 Lab Tasks Panel -->
       <div class="tasks-panel">
         <div class="panel-title">🏆 10 משימות מעבדה בארון התקשורת</div>
         <div id="tasksListContainer"></div>
       </div>
-
     </div>
-
   </div>
 
-  <!-- Bottom Cable Controls Toolbar -->
+  <!-- Bottom Cable Controls Toolbar with Straight and Crossover Cables -->
   <div class="bottom-toolbar">
     <div class="cable-selector-group">
       <span style="font-weight:bold; color:#f0f6fc;">בחירת כבל:</span>
-      <div class="cable-pill active" onclick="selectCable(this, 'LAN (Blue)', '#38bdf8')">
-        <div class="cable-dot" style="background:#38bdf8;"></div> LAN (כחול)
+      <div class="cable-pill active" onclick="selectCable(this, 'Straight-Through (Blue)', '#38bdf8', 'solid')">
+        <div class="cable-dot" style="background:#38bdf8;"></div> כבל ישיר (Straight)
       </div>
-      <div class="cable-pill" onclick="selectCable(this, 'WAN / ISP (Yellow)', '#f1c40f')">
+      <div class="cable-pill" onclick="selectCable(this, 'Crossover (Orange)', '#f97316', 'dashed')">
+        <div class="cable-dot" style="background:#f97316;"></div> כבל מוצלב (Crossover)
+      </div>
+      <div class="cable-pill" onclick="selectCable(this, 'WAN / ISP (Yellow)', '#f1c40f', 'solid')">
         <div class="cable-dot" style="background:#f1c40f;"></div> WAN (צהוב)
       </div>
-      <div class="cable-pill" onclick="selectCable(this, 'PoE (Green)', '#2ea043')">
+      <div class="cable-pill" onclick="selectCable(this, 'PoE (Green)', '#2ea043', 'solid')">
         <div class="cable-dot" style="background:#2ea043;"></div> PoE (ירוק)
       </div>
-      <div class="cable-pill" onclick="selectCable(this, 'Console / Mgmt (Grey)', '#c084fc')">
+      <div class="cable-pill" onclick="selectCable(this, 'Console / Mgmt (Grey)', '#c084fc', 'solid')">
         <div class="cable-dot" style="background:#c084fc;"></div> קונסול (אפור)
       </div>
-      <div class="cable-pill" onclick="selectCable(this, 'Power (Black)', '#484f58')">
+      <div class="cable-pill" onclick="selectCable(this, 'Power (Black)', '#484f58', 'solid')">
         <div class="cable-dot" style="background:#484f58;"></div> חשמל (שחור)
       </div>
 
-      <!-- Slack Control Slider -->
       <div class="slack-control">
-        <span style="font-size:10px; color:#58a6ff; font-weight:bold;">🔀 גמישות כבל (בטן):</span>
+        <span style="font-size:10px; color:#58a6ff; font-weight:bold;">🔀 גמישות כבל:</span>
         <input type="range" id="cableSlackRange" min="10" max="120" value="45" oninput="drawAllCables()" style="width:70px; cursor:pointer;">
       </div>
     </div>
-    <div>💡 טיפ: העבר כמות בלתי מוגבלת של רכיבים בין טור ימין לטור שמאל!</div>
+    <div>💡 טיפ: כבל קונסול אפור יש לשרשר מ-RS232 ב-PC1 ישירות לפורט Con!</div>
   </div>
 
-  <!-- Floating Crazy Bot -->
   <div class="crazy-floating-bot" onclick="window.open('https://gemini.google.com/gem/167016ac4a4b?usp=sharing', '_blank')">
     <img src="https://lh3.googleusercontent.com/d/1fzqv93VKIW_VT8-e1HdJxBmbU2sFnwlb" class="bot-avatar-img" alt="Crazy Bot">
     <span style="font-size:11px; font-weight:bold;">לשאלה לחץ עלי</span>
   </div>
 
-  <!-- Custom Dialog Modal -->
   <div class="custom-modal-overlay" id="customDialogModal">
     <div class="custom-modal-card">
       <div class="modal-banner-header" id="modalBannerHeader">
-        <div class="modal-banner-title" id="modalBannerTitle">
-          <span>🏆</span> משוב בדיקת משימה
-        </div>
+        <div class="modal-banner-title" id="modalBannerTitle"><span>🏆</span> משוב בדיקת משימה</div>
         <button class="modal-close-btn" onclick="closeCustomModal()">✕</button>
       </div>
       <div class="modal-body-content" id="modalBodyContent"></div>
@@ -824,8 +794,9 @@
   </div>
 
   <script>
-    let activeCable = 'LAN (Blue)';
+    let activeCable = 'Straight-Through (Blue)';
     let activeCableColor = '#38bdf8';
+    let activeCableDash = 'solid';
     let selectedPortElem = null;
     let selectedPortDetails = null;
     let connections = [];
@@ -846,7 +817,6 @@
       renderTasksList();
     });
 
-    /* FULL FLEXIBLE DRAG AND DROP BETWEEN INDEPENDENT RACK COLUMNS */
     function initDragAndDrop() {
       const columns = document.querySelectorAll('.rack-column');
       let draggedItem = null;
@@ -874,39 +844,31 @@
           if (!draggedItem) return;
 
           const afterElement = getColumnDragAfterElement(col, e.clientY);
-          if (afterElement == null) {
-            col.appendChild(draggedItem);
-          } else {
-            col.insertBefore(draggedItem, afterElement);
-          }
+          if (afterElement == null) col.appendChild(draggedItem);
+          else col.insertBefore(draggedItem, afterElement);
           drawAllCables();
         });
 
-        col.addEventListener('dragleave', () => {
-          col.classList.remove('drag-over');
-        });
+        col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
       });
     }
 
     function getColumnDragAfterElement(column, y) {
       const draggables = [...column.querySelectorAll('.rack-device:not(.dragging)')];
-
       return draggables.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-          return { offset: offset, element: child };
-        } else {
-          return closest;
-        }
+        if (offset < 0 && offset > closest.offset) return { offset: offset, element: child };
+        else return closest;
       }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
-    function selectCable(pillElem, cableType, color) {
+    function selectCable(pillElem, cableType, color, dashStyle = 'solid') {
       document.querySelectorAll('.cable-pill').forEach(p => p.classList.remove('active'));
       pillElem.classList.add('active');
       activeCable = cableType;
       activeCableColor = color;
+      activeCableDash = dashStyle;
     }
 
     function handlePortClick(portElem, deviceName, portName) {
@@ -948,7 +910,8 @@
           dev2: deviceName,
           port2Name: portName,
           cableType: activeCable,
-          color: activeCableColor
+          color: activeCableColor,
+          dashStyle: activeCableDash
         });
 
         selectedPortElem = null;
@@ -956,7 +919,6 @@
       }
     }
 
-    /* CURVED DYNAMIC CABLES WITH SLACK FLEXIBILITY */
     function drawAllCables() {
       const svg = document.getElementById('cableSvgContainer');
       if (!svg) return;
@@ -976,7 +938,6 @@
         const y2 = rect2.top + rect2.height / 2 - appRect.top;
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        
         const dx = (x2 - x1) * 0.2;
         const dy = Math.max(Math.abs(y2 - y1) * 0.3, slackVal);
         const d = `M ${x1} ${y1} C ${x1 + dx} ${y1 + dy + slackVal}, ${x2 - dx} ${y2 + dy + slackVal}, ${x2} ${y2}`;
@@ -987,6 +948,10 @@
         path.setAttribute('fill', 'none');
         path.setAttribute('opacity', '0.9');
         path.setAttribute('stroke-linecap', 'round');
+
+        if (conn.dashStyle === 'dashed') {
+          path.setAttribute('stroke-dasharray', '6,4');
+        }
 
         svg.appendChild(path);
       });
@@ -1085,19 +1050,21 @@
       );
     }
 
+    /* ACCURATE CONSOLE PORT CHECK BETWEEN RS232 (PC1) AND CONSOLE PORT */
     function openRealPuTTYTerminal(comPort, deviceName) {
       currentDevice = deviceName;
       document.getElementById('terminalTitle').innerText = `PuTTY (${comPort}) - ${deviceName}`;
       const screen = document.getElementById('terminalScreen');
 
       const hasConsoleConn = connections.some(c => 
-        (c.cableType.includes('Console') || c.color === '#c084fc') && 
-        ((c.dev1 === deviceName && c.port1Name === 'Console') || (c.dev2 === deviceName && c.port2Name === 'Console') ||
-         (c.dev1 === deviceName && c.port1Name === 'RS232') || (c.dev2 === deviceName && c.port2Name === 'RS232'))
+        (c.port1Name === 'RS232' && c.port2Name === 'Console') ||
+        (c.port2Name === 'RS232' && c.port1Name === 'Console') ||
+        (c.port1Name === 'Con' && c.port2Name === 'RS232') ||
+        (c.port2Name === 'Con' && c.port1Name === 'RS232')
       );
 
       if (!hasConsoleConn) {
-        screen.innerHTML = `=== PuTTY (${comPort}) ===\n[ERROR]: No Console cable detected between PC & ${deviceName}!\n\n`;
+        screen.innerHTML = `=== PuTTY (${comPort}) ===\n[ERROR]: No Console cable detected between PC (RS232) & ${deviceName} (Con)!\n\n`;
         cliMode = 'locked';
       } else {
         cliMode = deviceStates[deviceName]?.mode || 'user';
@@ -1256,12 +1223,12 @@
     }
 
     const labTasks = [
-      { id: 1, title: "1. חיבור ראוטר לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל LAN מ-g0/0/0 ל-Fa0/1", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('Router') && c.dev2.includes('Switch')) || (c.dev2.includes('Router') && c.dev1.includes('Switch'))) },
+      { id: 1, title: "1. חיבור ראוטר לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל ישיר מ-g0/0/0 ל-Fa0/1", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('Router') && c.dev2.includes('Switch')) || (c.dev2.includes('Router') && c.dev1.includes('Switch'))) },
       { id: 2, title: "2. חיבור Patch Panel לסוויץ'", diff: "Easy", diffClass: "diff-easy", phys: "כבל LAN מ-Port1 ל-Fa0/3", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('PatchPanel') && c.dev2.includes('Switch')) || (c.dev2.includes('PatchPanel') && c.dev1.includes('Switch'))) },
       { id: 3, title: "3. אספקת חשמל מה-PDU", diff: "Easy", diffClass: "diff-easy", phys: "כבל חשמל מ-PDU לפורט PWR", soft: "ללא", check: () => connections.some(c => c.cableType.includes('Power') || c.color === '#484f58') },
       { id: 4, title: "4. חיבור NVR ל-PoE Switch", diff: "Med", diffClass: "diff-med", phys: "כבל PoE ירוק מ-CAM1 ל-P1", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('NVR') && c.dev2.includes('PoE')) || (c.dev2.includes('NVR') && c.dev1.includes('PoE'))) },
       { id: 5, title: "5. חיבור חומת אש (Firewall)", diff: "Med", diffClass: "diff-med", phys: "כבל LAN מ-E0/1 ל-Fa0/4", soft: "ללא", check: () => connections.some(c => (c.dev1.includes('ASA') && c.dev2.includes('Switch')) || (c.dev2.includes('ASA') && c.dev1.includes('Switch'))) },
-      { id: 6, title: "6. חיבור Console ב-PuTTY", diff: "Easy", diffClass: "diff-easy", phys: "כבל קונסול מ-RS232 ל-Console", soft: "התחבר ב-COM3", check: () => connections.some(c => c.cableType.includes('Console') || c.color === '#c084fc') },
+      { id: 6, title: "6. חיבור Console ב-PuTTY", diff: "Easy", diffClass: "diff-easy", phys: "כבל קונסול מ-RS232 ב-PC1 ל-Con ברשת", soft: "התחבר ב-COM3", check: () => connections.some(c => (c.port1Name === 'RS232' && (c.port2Name === 'Console' || c.port2Name === 'Con')) || (c.port2Name === 'RS232' && (c.port1Name === 'Console' || c.port1Name === 'Con'))) },
       { id: 7, title: "7. הגדרת Hostname בראוטר", diff: "Easy", diffClass: "diff-easy", phys: "אין", soft: "hostname R1", check: () => deviceStates['Router1']?.hostnameChanged || executedCommands.some(c => c.cmd.startsWith('hostname')) },
       { id: 8, title: "8. הגדרת IP בראוטר", diff: "Med", diffClass: "diff-med", phys: "אין", soft: "הגדרת IP ידנית", check: () => deviceStates['Router1']?.ip !== '' },
       { id: 9, title: "9. בדיקת Ping מ-PC1", diff: "Hard", diffClass: "diff-hard", phys: "אין", soft: "הרצת ping ב-Terminal", check: () => executedCommands.some(c => c.cmd.startsWith('ping')) },
